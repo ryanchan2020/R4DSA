@@ -6,14 +6,14 @@
       "description": "This blog displays the portfolio of Ryan Chan's ISSS608 Visual Analytics work",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2021-05-22T10:14:05+08:00"
+      "last_modified": "2021-05-22T12:16:12+08:00"
     },
     {
       "path": "index.html",
       "title": "R for Data Science and Analytics",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2021-05-22T10:22:30+08:00"
+      "last_modified": "2021-05-22T12:16:22+08:00"
     }
   ],
   "collections": ["posts/posts.json"]

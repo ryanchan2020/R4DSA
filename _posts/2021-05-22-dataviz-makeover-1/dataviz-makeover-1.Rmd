@@ -25,8 +25,8 @@ In this article, we will show you how to plot a figure with multiple histograms 
 
 Before you get started, you are required:
 
-to start a new R project, and
-to create a new R Markdown document.
+* to start a new R project, and
+* to create a new R Markdown document.
 
 Next, you will use the code chunk below to install and launch ggpubr and tidyverse in RStudio.
 

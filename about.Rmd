@@ -1,7 +1,7 @@
 ---
 title: "About this blog"
 description: |
-  This blog displays the portfolio of Ryan Chan's ISSS608 Visual Analytics work
+  This blog displays the portfolio of Ryan Chan's ISSS608 Visual Analytics work test
 ---
 
 ```{r setup, include=FALSE}

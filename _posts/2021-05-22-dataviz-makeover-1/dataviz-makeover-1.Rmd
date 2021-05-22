@@ -16,12 +16,12 @@ output:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-1.0 Overview
+# 1.0 Overview
 
 In this article, we will show you how to plot a figure with multiple histograms by using ggplot2 and ggpubr packages. 
 
 
-2.0 Installing and Launching R Packages
+# 2.0 Installing and Launching R Packages
 
 Before you get started, you are required:
 
@@ -41,12 +41,12 @@ for(p in packages){library
 }
 
 
-3.0 Importing and Preparing The Data Set 
+# 3.0 Importing and Preparing The Data Set 
 
 In this hands-on exercise, the [Wine Quality Data Set](https://archive.ics.uci.edu/ml/datasets/wine+quality) of UCI Machine Learning Repository will be used.  The data set consists of 13 variables and 6497 observations.  For the purpose of this exercise, we have combined the red wine and white wine data into one data file.  It is called wine_quality and is in csv file format.  
 
 
-3.1 Importing Data
+## 3.1 Importing Data
 
 First, let us import the data into R by using read_csv() of readr package.  
 
@@ -58,7 +58,7 @@ wine <- read_csv("data/wine_quality.csv")
 Notice that beside quality and type, the rest of the variables are numerical and continuous data type. 
 
 
-4.0 Univariate EDA with Histogram
+# 4.0 Univariate EDA with Histogram
 
 In the figure below, multiple histograms are plottted by using ggplot() and geom_histogram() of ggplot2 package.  Then, ggarrange() of ggpubr package is used to patch these histogram into a single figure to reveal the distribution of the selected variables in the wine quality data sets.  
 

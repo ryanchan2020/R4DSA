@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # 1.0 Overview
 
-In this article, we will show you how to plot a figure with multiple histograms by using ggplot2 and ggpubr packages. 
+In this article, we will show you how to plot a figure with multiple histograms by using **ggplot2** and **ggpubr** packages. 
 
 
 # 2.0 Installing and Launching R Packages

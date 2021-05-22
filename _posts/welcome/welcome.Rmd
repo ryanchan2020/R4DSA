@@ -2,7 +2,7 @@
 title: "Welcome to R for Data Science and Analytics"
 description: |
   Welcome to our new blog, R for Data Science and Analytics. We hope you enjoy 
-  reading what we have to say!
+  reading what we have to say! test
 author:
   - name: Ryan Chan 
     url: https://www.linkedin.com/in/ryan-chan-a7021b5/

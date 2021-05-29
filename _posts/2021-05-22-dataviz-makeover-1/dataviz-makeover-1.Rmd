@@ -1,11 +1,11 @@
 ---
-title: "DataViz Makeover 1"
+title: "DataViz Makeover 1 - Singapore International Trade"
 description: |
-  A short description of the post.
+  A data visualization makeover and a Tableau tutorial for beginners.
 author:
   - name: Ryan Chan
     url: https://www.linkedin.com/in/ryan-chan-a7021b5/
-date: 05-22-2021
+date: 05-29-2021
 output:
   distill::distill_article:
     self_contained: false
@@ -91,7 +91,7 @@ The data was first cleaned and prepared using Tableau Prep Builder and then load
 
 3. Tick the ‘Use Data Interpreter’ check box.
 
-![](img/3. Importing Data.JPG)
+![](img/3. Importing Data.JPG){width=60%}
 
 4. Tableau’s Data Interpreter will try its best to figure out the underlying table structure in each worksheet. The result of cleaning with Data Interpreter are as follows:
 
@@ -109,11 +109,11 @@ The data was first cleaned and prepared using Tableau Prep Builder and then load
   
 2. On the left panel, select all fields except ‘Subject: Merchandise Trade’ and drag them to the ‘Pivoted Fields’ pane.
 
-![](img/6. Pivoting Data.JPG)
+![](img/6. Pivoting Data.JPG){width=70%}
 
 3. After pivoting the relevant fields, add another step to ‘clean’ data.
 
-![](img/7. Add Clean Step.JPG)
+![](img/7. Add Clean Step.JPG){width=60%}
 
 
 ## 4.3 Cleaning Data
@@ -134,7 +134,7 @@ The data was first cleaned and prepared using Tableau Prep Builder and then load
 
 5. Filter for the time period we want.
 
-![](img/11. Time Filter.JPG)
+![](img/11. Time Filter.JPG){width=60%}
 
 
 ## 4.4 Joining Data
@@ -246,7 +246,7 @@ We will now create a table to display Singapore’s total trade volumes with eac
 
 3. Click on the dropdown arrow of each of the ‘Measure Values’ and format number to show the currency and numbers in Billions with 1 decimal place.
 
-![](img/26. Edit Number Format.JPG)
+![](img/26. Edit Number Format.JPG){width=60%}
 
 4. Drag ‘Measure Names’ into the ‘Rows’ shelf.
 
@@ -265,7 +265,7 @@ We will now create a table to display Singapore’s total trade volumes with eac
 
 1. Click on the dropdown arrow of ‘Measure Values’ with the colour icon, and select ‘Use Separate Legends’.
 
-![](img/28. Use Separate Legends.JPG)
+![](img/28. Use Separate Legends.JPG){width=40%}
 
 2. Under the colour legend on the right-hand side of the window, click the dropdown arrow of ‘SUM(Export)’ and select ‘Edit Colors’. In the ‘Edit Colors’ settings, we will edit the colours for the Export and Import values.
 
@@ -273,13 +273,13 @@ We will now create a table to display Singapore’s total trade volumes with eac
 
     Repeat steps for ‘SUM(Import)’ colour legend.
 
-![](img/29. Black Values.JPG)
+![](img/29. Black Values.JPG){width=50%}
 
 3. Under the colour legend on the right-hand side of the window, click the dropdown arrow of ‘SUM(Differences)’ and select ‘Edit Colors’. In the ‘Edit Colors’ settings, we will edit the colours for the Difference values.
 
     Select ‘Custom Diverging’ from the ‘Palette’ dropdown list. Check the ‘Stepped Color’ option and change to 2 steps. Change the left side to red and the right side to green. Click ‘Advanced’ option and tick the ‘Center’ box and type in 0. Check ‘Include Totals’ box. Click ‘Apply’ and then ‘OK’. Click the dropdown arrow for ‘SUM(Difference)’ colour legend and select ‘Hide Card’.
 
-![](img/30. Coloured Values.JPG)
+![](img/30. Coloured Values.JPG){width=50%}
 
 4. Rename table to ‘Trade Totals’. Result table will look like this:
 
@@ -294,11 +294,11 @@ We will now create a table to display Singapore’s total trade volumes with eac
 
 1. In the pages tab at the bottom of the window, click ‘New Dashboard’ icon to open up a new dashboard.
 
-![](img/33. Create New Dashboard.JPG)
+![](img/33. Create New Dashboard.JPG){width=80%}
 
 2. Under the ‘Size’ options, select ‘Automatic’.
 
-![](img/34. Automatic Sizing.JPG)
+![](img/34. Automatic Sizing.JPG){width=40%}
 
 3. Drag and drop both the ‘Main’ and ‘Totals’ sheet into the windows, with the ‘Main’ sheet above and ‘Totals’ sheet below. Right-click on any blank space in the ‘Trade Totals’ sheet and select the ‘Caption’ option. Realign the data tables from both sheets accordingly so they align together nicely. The result should look something like this:
 

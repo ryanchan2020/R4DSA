@@ -116,7 +116,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["dataviz-makeover-1_files/anchor-4.2.2/anchor.min.js","dataviz-makeover-1_files/bowser-1.9.3/bowser.min.js","dataviz-makeover-1_files/distill-2.2.21/template.v2.js","dataviz-makeover-1_files/header-attrs-2.7/header-attrs.js","dataviz-makeover-1_files/jquery-1.11.3/jquery.min.js","dataviz-makeover-1_files/popper-2.6.0/popper.min.js","dataviz-makeover-1_files/tippy-6.2.7/tippy-bundle.umd.min.js","dataviz-makeover-1_files/tippy-6.2.7/tippy-light-border.css","dataviz-makeover-1_files/tippy-6.2.7/tippy.css","dataviz-makeover-1_files/tippy-6.2.7/tippy.umd.min.js","dataviz-makeover-1_files/webcomponents-2.0.0/webcomponents.js","img/Profit and Sales.jpg"]}
+  {"type":"character","attributes":{},"value":["dataviz-makeover-1_files/anchor-4.2.2/anchor.min.js","dataviz-makeover-1_files/bowser-1.9.3/bowser.min.js","dataviz-makeover-1_files/distill-2.2.21/template.v2.js","dataviz-makeover-1_files/header-attrs-2.7/header-attrs.js","dataviz-makeover-1_files/jquery-1.11.3/jquery.min.js","dataviz-makeover-1_files/popper-2.6.0/popper.min.js","dataviz-makeover-1_files/tippy-6.2.7/tippy-bundle.umd.min.js","dataviz-makeover-1_files/tippy-6.2.7/tippy-light-border.css","dataviz-makeover-1_files/tippy-6.2.7/tippy.css","dataviz-makeover-1_files/tippy-6.2.7/tippy.umd.min.js","dataviz-makeover-1_files/webcomponents-2.0.0/webcomponents.js","img/1. Original Visualization.JPG","img/10. Date Conversion.JPG","img/11. Time Filter.JPG","img/12. Create Join.JPG","img/13. Additional Clean.JPG","img/14. Run Output.JPG","img/15. Import to Tableau.JPG","img/16. Import Result.JPG","img/17. Create Chart.JPG","img/18. Change to Bar.JPG","img/19. Reverse Axis.JPG","img/2. Proposed Alternative.jpg","img/20. Colour Chart.JPG","img/21. Edit Colours.JPG","img/22. Change Colour Scheme.JPG","img/23. Colour Change Result.JPG","img/24. Rename Title.JPG","img/25. Create Difference.JPG","img/26. Edit Number Format.JPG","img/27. Totals First Cut.JPG","img/28. Use Separate Legends.JPG","img/29. Black Values.JPG","img/3. Importing Data.JPG","img/30. Coloured Values.JPG","img/31. Trade Totals.JPG","img/32. Add Caption.JPG","img/33. Create New Dashboard.JPG","img/34. Automatic Sizing.JPG","img/35. Final Dashboard.JPG","img/36. Final View.JPG","img/4. Original Before Data Interpreter.jpg","img/5. After Data Interpreter.JPG","img/6. Pivoting Data.JPG","img/7. Add Clean Step.JPG","img/8. Rename and Calculate Import.JPG","img/9. Country Filter.JPG"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1478,32 +1478,236 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 
 <div class="d-article">
-<h1 id="overview-test">1.0 Overview (test)</h1>
-<p>In this article, we will show you how to plot a figure with multiple histograms by using <a href="https://ggplot2.tidyverse.org/"><strong>ggplot2</strong></a> and <strong>ggpubr</strong> packages.</p>
-<h1 id="installing-and-launching-r-packages">2.0 Installing and Launching R Packages</h1>
-<p>Before you get started, you are required:</p>
+<h1 id="original-visualization">1.0 ORIGINAL VISUALIZATION</h1>
+<p><img src="img/1.%20Original%20Visualization.JPG" /> The above chart shows a visualization depicting merchandising trade of the top six trading countries from 2019-2020. The data is available at <a href="https://www.singstat.gov.sg/find-data/search-by-theme/trade-and-investment/merchandise-trade/latest-data">https://www.singstat.gov.sg/find-data/search-by-theme/trade-and-investment/merchandise-trade/latest-data</a>, and can be downloaded from the Merchandise Trade by Region/Market section under ‘Download all in Excel’.</p>
+<p>Before we analyse the visualization, it is important to gain a clear understanding of the context of the visualization and the data it represents.</p>
 <ul>
-<li>to start a new R project, and</li>
-<li>to create a new R Markdown document.</li>
+<li>Data is meant to represent Singapore’s trade values (Exports and Imports) with its top six trading partners</li>
+<li>Visualization is indicated by the title to be from 2019 to 2020</li>
+<li>Both the visualization and underlying data source do not indicate the currency in which these trade values are published, hence for the purposes of this project we shall make the assumption of values being in Singapore dollars, reasonable given that the data comes from a government agency</li>
 </ul>
-<p>To insert a graph:</p>
-<p><img src="img/Profit%20and%20Sales.jpg" /></p>
-<p>Next, you will use the code chunk below to install and launch ggpubr and tidyverse in RStudio.</p>
-<h1 id="r-code">R code</h1>
-<p>packages = c(‘ggpubr’, ‘tidyverse’)</p>
-<p>for(p in packages){library if(!require(p, character.only = T)){ install.packages(p) } library(p, character.only = T) }</p>
-<h1 id="importing-and-preparing-the-data-set">3.0 Importing and Preparing The Data Set</h1>
-<p>In this hands-on exercise, the <a href="https://archive.ics.uci.edu/ml/datasets/wine+quality">Wine Quality Data Set</a> of UCI Machine Learning Repository will be used. The data set consists of 13 variables and 6497 observations. For the purpose of this exercise, we have combined the red wine and white wine data into one data file. It is called wine_quality and is in csv file format.</p>
-<h2 id="importing-data">3.1 Importing Data</h2>
-<p>First, let us import the data into R by using read_csv() of readr package.</p>
-<h1 id="r-code-1">R code</h1>
-<p>wine &lt;- read_csv(“data/wine_quality.csv”)</p>
-<p>Notice that beside quality and type, the rest of the variables are numerical and continuous data type.</p>
-<h1 id="univariate-eda-with-histogram">4.0 Univariate EDA with Histogram</h1>
-<p>In the figure below, multiple histograms are plottted by using ggplot() and geom_histogram() of ggplot2 package. Then, ggarrange() of ggpubr package is used to patch these histogram into a single figure to reveal the distribution of the selected variables in the wine quality data sets.</p>
-<h1 id="rcode">Rcode</h1>
-<p>fa &lt;- ggplot(data=wine, aes(x= <code>fixed acidity</code>)) + geom_histogram(bins=20, color=“black”, fill=“light blue”) va &lt;- ggplot(data=wine, aes(x= <code>volatile acidity</code>)) + geom_histogram(bins=20, color=“black”, fill=“light blue”) ca &lt;- ggplot(data=wine, aes(x= <code>citric acid</code>)) + geom_histogram(bins=20, color=“black”, fill=“light blue”) rs &lt;- ggplot(data=wine, aes(x= <code>residual sugar</code>)) + geom_histogram(bins=20, color=“black”, fill=“light blue”) ch &lt;- ggplot(data=wine, aes(x= <code>chlorides</code>)) + geom_histogram(bins=20, color=“black”, fill=“light blue”) fSO2 &lt;- ggplot(data=wine, aes(x= <code>free sulfur dioxide</code>)) + geom_histogram(bins=20, color=“black”, fill=“light blue”) tSO2 &lt;- ggplot(data=wine, aes(x= <code>total sulfur dioxide</code>)) + geom_histogram(bins=20, color=“black”, fill=“light blue”) density &lt;- ggplot(data=wine, aes(x= density)) + geom_histogram(bins=20, color=“black”, fill=“light blue”) pH &lt;- ggplot(data=wine, aes(x= pH)) + geom_histogram(bins=20, color=“black”, fill=“light blue”) sulphates &lt;- ggplot(data=wine, aes(x= sulphates)) + geom_histogram(bins=20, color=“black”, fill=“light blue”) alcohol &lt;- ggplot(data=wine, aes(x= alcohol)) + geom_histogram(bins=20, color=“black”, fill=“light blue”)</p>
-<p>ggarrange(fa, va, ca, rs, ch, fSO2, tSO2, density, pH, sulphates, alcohol, ncol = 4, nrow = 3)</p>
+<h1 id="critique-of-visualization">2.0 CRITIQUE OF VISUALIZATION</h1>
+<h2 id="clarity">2.1 Clarity</h2>
+<ol type="1">
+<li><p>The chart title is not very clear; a first-time reader might misidentify the visualization to be about the total value of international trade that each of the countries conducted, and that these six countries represent the top six countries in the world in terms of trade value. Instead the data is referring to value of trade each country conducts with Singapore, and that these countries represent Singapore’s top six trading partners.</p></li>
+<li><p>The title states that the period of data the visualization is meant to display is from 2019 to 2020. That itself is not clear; should we take it to mean from Jan 2019 to Jan 2020, or perhaps Jan 2019 to Dec 2020? For this project however, we shall assume a consistent period range of Jan 2019 to Dec 2020 for all values.</p>
+<ul>
+<li>Furthermore, the horizontal axes of the six charts have different ranges, with Japan seemingly having a range that only covers 2020.</li>
+</ul></li>
+<li><p>The vertical axes for the six charts are all in different ranges, making it hard to compare between countries.</p></li>
+<li><p>The visualization intends to depict trade values over months, but using an area-type chart which makes it hard to tell the values of each month, and identify which months have specific trends (e.g. spikes, troughs).</p></li>
+<li><p>The chart does not explicitly state the denomination of the values shown, and readers might be misled into thinking that the trade volumes range from a few hundred thousand to a few million. Yet, upon closer inspection of the underlying data source, the values are actually given in denominations of thousands ($000s) and actual trade volumes range from a few hundred million to billions.</p></li>
+</ol>
+<h2 id="aesthetics">2.2 Aesthetics</h2>
+<ol type="1">
+<li><p>The width size of each chart are different from each other, making the visual not aesthetically balanced.</p></li>
+<li><p>The positioning of the charts does not make it easy for country-to-country comparison – they are too far apart and having 3 countries on top and 3 countries below is not ideal for comparison.</p></li>
+<li><p>The use of overlapping area charts with the orange import overlaid on the blue export values makes it not too pleasing on the eyes, it might take reader’s eyes a while to adjust to finding the blue values especially when they are ‘hidden’ behind the orange area.</p></li>
+</ol>
+<h1 id="proposed-alternative-design">3.0 PROPOSED ALTERNATIVE DESIGN</h1>
+<p><img src="img/2.%20Proposed%20Alternative.jpg" /></p>
+<h2 id="advantages-of-new-design">3.1 Advantages of New Design</h2>
+<ol type="1">
+<li><p>Title changed to better reflect the objective and period range of the visualization. Subtitle added to include a short summary of key findings.</p></li>
+<li><p>Chart type changed to bar chart, to enable ease of month-to-month comparisons.</p></li>
+<li><p>Separated export and import trade values, with import values displayed in a reverse (upside-down) manner, to enable easier-on-the-eye comparison between the magnitudes of export and import volumes.</p></li>
+<li><p>To ease country-to-country comparison, certain changes were made:</p>
+<ol type="a">
+<li>Charts are placed side by side each other on the same level</li>
+<li>Horizontal axes and chart width were standardized</li>
+<li>Vertical axes standardized to 0 to 8 billion</li>
+</ol></li>
+<li><p>For each chart (export and import), categorise values into two types – if an export / import value is higher than its export / import counterpart in the same month, that value will contain a darker shade of the colour scheme used. This enables reader to easily identify in which months Singapore had more net exports or imports for each of their trading partners.</p></li>
+<li><p>Included additional information on trade totals:</p>
+<ol type="a">
+<li>Aggregated totals of export and import trade volumes in the period range</li>
+<li>Calculated export and import differences to find out whether Singapore has trading surpluses or deficits with each trading partner</li>
+</ol></li>
+</ol>
+<h1 id="data-preparation">4.0 DATA PREPARATION</h1>
+<p>The data was first cleaned and prepared using Tableau Prep Builder and then loaded into and visualized using Tableau.</p>
+<h2 id="importing-data">4.1 Importing Data</h2>
+<ol type="1">
+<li><p>Create a connection to the data source.</p></li>
+<li><p>Drag the tables (T1 and T2) to edit into the canvas to start their respective flows. From this point onwards, both tables shall be handled in the same manner until the moment they are joined.</p></li>
+<li><p>Tick the ‘Use Data Interpreter’ check box.</p></li>
+</ol>
+<p><img src="img/3.%20Importing%20Data.JPG" /></p>
+<ol start="4" type="1">
+<li>Tableau’s Data Interpreter will try its best to figure out the underlying table structure in each worksheet. The result of cleaning with Data Interpreter are as follows:</li>
+</ol>
+<p><strong>Original</strong></p>
+<p><img src="img/4.%20Original%20Before%20Data%20Interpreter.jpg" /></p>
+<p><strong>After Data Interpreter is Used</strong></p>
+<p><img src="img/5.%20After%20Data%20Interpreter.JPG" /></p>
+<h2 id="pivoting-data">4.2 Pivoting Data</h2>
+<ol type="1">
+<li><p>Click on the ‘+’ sign beside the table and select ‘Pivot’</p></li>
+<li><p>On the left panel, select all fields except ‘Subject: Merchandise Trade’ and drag them to the ‘Pivoted Fields’ pane.</p></li>
+</ol>
+<p><img src="img/6.%20Pivoting%20Data.JPG" /></p>
+<ol start="3" type="1">
+<li>After pivoting the relevant fields, add another step to ‘clean’ data.</li>
+</ol>
+<p><img src="img/7.%20Add%20Clean%20Step.JPG" /></p>
+<h2 id="cleaning-data">4.3 Cleaning Data</h2>
+<ol type="1">
+<li><p>Rename the fields accordingly</p></li>
+<li><p>Create a calculated field to derive the actual value of each row</p></li>
+</ol>
+<p><img src="img/8.%20Rename%20and%20Calculate%20Import.JPG" /></p>
+<ol start="3" type="1">
+<li>Filter for the six countries we want</li>
+</ol>
+<p><img src="img/9.%20Country%20Filter.JPG" /></p>
+<ol start="4" type="1">
+<li>Convert the ‘Year Month’ field into a date time format</li>
+</ol>
+<p><img src="img/10.%20Date%20Conversion.JPG" /></p>
+<ol start="5" type="1">
+<li>Filter for the time period we want.</li>
+</ol>
+<p><img src="img/11.%20Time%20Filter.JPG" /></p>
+<h2 id="joining-data">4.4 Joining Data</h2>
+<ol type="1">
+<li><p>Add a new step to join the two cleaned tables.</p></li>
+<li><p>Under settings, apply two join clauses: Period and Country. Output should be a total of 144 resulting rows.</p></li>
+</ol>
+<p><img src="img/12.%20Create%20Join.JPG" /></p>
+<ol start="3" type="1">
+<li><p>Create an additional clean step.</p>
+<ol type="a">
+<li>Remove duplicated fields</li>
+<li>Create 2 additional fields to indicate if i) Exports &gt; Imports and ii) Imports &gt; Exports (this will be used to supplement the visualization in Tableau later on)</li>
+</ol></li>
+</ol>
+<p><img src="img/13.%20Additional%20Clean.JPG" /></p>
+<h2 id="run-output-flow">4.5 Run Output Flow</h2>
+<ol type="1">
+<li>Add an Output step and click ‘Run Flow’ to save the data as a Tableau Data Extract (.hyper)</li>
+</ol>
+<p><img src="img/14.%20Run%20Output.JPG" /></p>
+<h1 id="data-makeover-with-tableau">5.0 DATA MAKEOVER WITH TABLEAU</h1>
+<h2 id="makeover-original-chart">5.1 Makeover Original Chart</h2>
+<h3 id="importing-data-into-tableau">5.1.1 Importing Data into Tableau</h3>
+<ol type="1">
+<li>Launch Tableau Desktop, and under the ‘Connect To a File’ section select ‘More’. Navigate to the Tableau Data Extract file we have just saved.</li>
+</ol>
+<p><img src="img/15.%20Import%20to%20Tableau.JPG" /></p>
+<ol start="2" type="1">
+<li>Rename ‘Sheet 1’ to ‘Main’. Navigate to ‘Main’ to begin makeover. Result of the connection will look like this:</li>
+</ol>
+<p><img src="img/16.%20Import%20Result.JPG" /></p>
+<h3 id="create-chart">5.1.2 Create Chart</h3>
+<ol type="1">
+<li>Drag ‘Country’ and ‘Period’ into ‘Columns’ shelf. Click on the dropdown arrow on the ‘Period’ icon and select the second ‘Month’ option to drill down the period display into months.</li>
+</ol>
+<p><img src="img/17.%20Create%20Chart.JPG" /></p>
+<ol start="2" type="1">
+<li>Drag the ‘Export’ and ‘Import’ measures into the ‘Rows’ shelf. The default chart displayed is a line chart. Under the ‘All’ section in the ‘Marks’ shelf, select the dropdown menu to change chart type to ‘Bar’.</li>
+</ol>
+<p><img src="img/18.%20Change%20to%20Bar.JPG" /></p>
+<ol start="3" type="1">
+<li><p>For both Import and Export axes, right-click on each axis and perform the following actions:</p>
+<ol type="a">
+<li>Set fixed range – Fixed Start: 0, Fixed End: 8,000,000,000</li>
+<li>Rename Axis Title – Export / Import <strong>($SGD)</strong></li>
+<li>For <strong>Import Axis only</strong>: Check the ‘Reversed’ box</li>
+</ol></li>
+</ol>
+<p><img src="img/19.%20Reverse%20Axis.JPG" /></p>
+<h3 id="colourize-chart">5.1.3 Colourize Chart</h3>
+<ol type="1">
+<li>Under the ‘SUM(Export)’ mark, drag the ‘Export &gt; Import?’ measure into the ‘Color’ box, repeat the steps for the ‘SUM(Import)’ mark using the ‘Import &gt; Export?’ measure.</li>
+</ol>
+<p><img src="img/20.%20Colour%20Chart.JPG" /></p>
+<ol start="2" type="1">
+<li>Under the colour legend, click the dropdown arrow and select ‘Edit Colors’.</li>
+</ol>
+<p><img src="img/21.%20Edit%20Colours.JPG" /></p>
+<ol start="3" type="1">
+<li>In the ‘Edit Colors’ settings, we will edit the colours of the bars.</li>
+</ol>
+<p>For the Import data, we will use the orange colour scheme, with a darker shade to represent months where imports exceed exports, and a lighter shade to represent months where the imports are less than exports.</p>
+<p>For the Export data, we will use the green colour scheme, with a darker shade to represent months where exports exceed imports, and a lighter shade to represent months where the exports are less than imports.</p>
+<p><img src="img/22.%20Change%20Colour%20Scheme.JPG" /></p>
+<p>The result will look something like this:</p>
+<p><img src="img/23.%20Colour%20Change%20Result.JPG" /></p>
+<h3 id="edit-title">5.1.4 Edit Title</h3>
+<ol type="1">
+<li>Change the title and add subtitle to better reflect the summary and objectives of the visualization</li>
+</ol>
+<p><img src="img/24.%20Rename%20Title.JPG" /></p>
+<h2 id="create-totals-table">5.2 Create Totals Table</h2>
+<p>We will now create a table to display Singapore’s total trade volumes with each of their trading partners over the selected period.</p>
+<h3 id="create-new-sheet-and-new-calculated-field">5.2.1 Create new sheet and new calculated field</h3>
+<ol type="1">
+<li><p>Create new sheet and rename to ‘Totals’.</p></li>
+<li><p>In the ‘Tables’ section right-click and select ‘Create Calculated Field’. Create a new calculation showing the difference between Export and Import (i.e. Export-Import).</p></li>
+</ol>
+<p><img src="img/25.%20Create%20Difference.JPG" /></p>
+<h3 id="select-relevant-data-to-display">5.2.2 Select Relevant Data to Display</h3>
+<ol type="1">
+<li><p>Drag ‘Country’ and ‘Period’ into ‘Columns’ shelf.</p></li>
+<li><p>Drag ‘Measure Values’ into the ‘Text’ box under the ‘Marks’ shelf.</p></li>
+<li><p>Click on the dropdown arrow of each of the ‘Measure Values’ and format number to show the currency and numbers in Billions with 1 decimal place.</p></li>
+</ol>
+<p><img src="img/26.%20Edit%20Number%20Format.JPG" /></p>
+<ol start="4" type="1">
+<li><p>Drag ‘Measure Names’ into the ‘Rows’ shelf.</p></li>
+<li><p>Delete ‘CNT(Extract)’ from the ‘Measure Values’ shelf.</p></li>
+<li><p>Drag ‘Measure Values’ into the ‘Color’ box under the ‘Marks’ shelf.</p></li>
+<li><p>Under the ‘Analysis’ toolbar, navigate to ‘Totals’ and select ‘Show Row Grand Totals’.</p></li>
+<li><p>Rearrange the values so that ‘SUM(Difference)’ is at the bottom. Result will look like this:</p></li>
+</ol>
+<p><img src="img/27.%20Totals%20First%20Cut.JPG" /></p>
+<h3 id="editing-the-colour-scheme-for-table-data">5.2.3 Editing the Colour scheme for table data</h3>
+<ol type="1">
+<li>Click on the dropdown arrow of ‘Measure Values’ with the colour icon, and select ‘Use Separate Legends’.</li>
+</ol>
+<p><img src="img/28.%20Use%20Separate%20Legends.JPG" /></p>
+<ol start="2" type="1">
+<li><p>Under the colour legend on the right-hand side of the window, click the dropdown arrow of ‘SUM(Export)’ and select ‘Edit Colors’. In the ‘Edit Colors’ settings, we will edit the colours for the Export and Import values.</p>
+<p>Select ‘Custom Diverging’ from the ‘Palette’ dropdown list. Check the ‘Stepped Color’ option and change to 2 steps. Change both colours on the left and right side of the palette to black. Check ‘Include Totals’ box. Click ‘Apply’ and then ‘OK’. Click the dropdown arrow for ‘SUM(Exports)’ colour legend and select ‘Hide Card’.</p>
+<p>Repeat steps for ‘SUM(Import)’ colour legend.</p></li>
+</ol>
+<p><img src="img/29.%20Black%20Values.JPG" /></p>
+<ol start="3" type="1">
+<li><p>Under the colour legend on the right-hand side of the window, click the dropdown arrow of ‘SUM(Differences)’ and select ‘Edit Colors’. In the ‘Edit Colors’ settings, we will edit the colours for the Difference values.</p>
+<p>Select ‘Custom Diverging’ from the ‘Palette’ dropdown list. Check the ‘Stepped Color’ option and change to 2 steps. Change the left side to red and the right side to green. Click ‘Advanced’ option and tick the ‘Center’ box and type in 0. Check ‘Include Totals’ box. Click ‘Apply’ and then ‘OK’. Click the dropdown arrow for ‘SUM(Difference)’ colour legend and select ‘Hide Card’.</p></li>
+</ol>
+<p><img src="img/30.%20Coloured%20Values.JPG" /></p>
+<ol start="4" type="1">
+<li>Rename table to ‘Trade Totals’. Result table will look like this:</li>
+</ol>
+<p><img src="img/31.%20Trade%20Totals.JPG" /></p>
+<ol start="5" type="1">
+<li>Right-click anywhere on the canvas and click ‘caption’. A caption should appear at the bottom of the canvas. Double-click on the caption window and edit the caption to show the source of data.</li>
+</ol>
+<p><img src="img/32.%20Add%20Caption.JPG" /></p>
+<h2 id="create-dashboard-and-combine-charts">5.3 Create Dashboard and Combine Charts</h2>
+<ol type="1">
+<li>In the pages tab at the bottom of the window, click ‘New Dashboard’ icon to open up a new dashboard.</li>
+</ol>
+<p><img src="img/33.%20Create%20New%20Dashboard.JPG" /></p>
+<ol start="2" type="1">
+<li>Under the ‘Size’ options, select ‘Automatic’.</li>
+</ol>
+<p><img src="img/34.%20Automatic%20Sizing.JPG" /></p>
+<ol start="3" type="1">
+<li>Drag and drop both the ‘Main’ and ‘Totals’ sheet into the windows, with the ‘Main’ sheet above and ‘Totals’ sheet below. Right-click on any blank space in the ‘Trade Totals’ sheet and select the ‘Caption’ option. Realign the data tables from both sheets accordingly so they align together nicely. The result should look something like this:</li>
+</ol>
+<p><img src="img/35.%20Final%20Dashboard.JPG" /></p>
+<p><strong>Voila! We have created our first dashboard!</strong> Visit this link to access the dashboard on Tableau Public: <a href="https://public.tableau.com/app/profile/ryan.chan8444/viz/DataVizMakeover1SingaporesMerchandiseTradewithTopSixTradingCountries2019-2020/Dashboard">Tableau Public Dashboard</a></p>
+<h1 id="major-observations">Major Observations</h1>
+<p><img src="img/36.%20Final%20View.JPG" /></p>
+<ol type="1">
+<li><p>Over the selected period, we can observe that, except for a few months, we can see a relatively clear trend of Mainland China consistently ranking as Singapore’s top trading partner in terms of trade volumes for both exports and imports.</p></li>
+<li><p>Hong Kong’s entry into the top six trading partners list is due to Singapore being an extremely high exporter to Hong Kong, with relatively very low imports. On the other hand Taiwan is the opposite, where the import trade values consistently exceeds the export trade values.</p></li>
+<li><p>From the Trade Totals table, it can be seen that Singapore experienced trade surpluses with Hong Kong and Mainland China, and trade deficits with Japan, Malaysia and Taiwan, in both 2019 and 2020. Singapore experienced a trade deficit in 2019, however turning it around to a trade surplus in 2020. Overall, Singapore remained a net exporter over the 2-year period, with a trade surplus of ~S$52.7 billion.</p></li>
+</ol>
+<p>Thank you for reading, we hope you have learnt something new and enjoyed the process!</p>
+<p>Ryan</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

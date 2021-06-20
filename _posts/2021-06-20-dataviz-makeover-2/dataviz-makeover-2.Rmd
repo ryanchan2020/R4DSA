@@ -119,24 +119,24 @@ The data was first cleaned and prepared using Tableau Prep Builder and then load
 
 2. Create a calculated field to derive the actual value of each row
 
-![](img/8. Rename and Calculate Import.JPG)
+![](img/8. Rename and Calculate Import.JPG){width=70%}
 
 3. Use the filter function to exclude continents
 
-![](img/9. Exclude Continents.jpg)
+![](img/9. Exclude Continents.jpg){width=60%}
 
 
 
 
 4. Convert the ‘Year Month’ field into a date time format
 
-![](img/10. Convert to DateTime.jpg)
+![](img/10. Convert to DateTime.jpg){width=60%}
 
 
 
 5. Filter for the time period we want.
 
-![](img/11. Filter Time Period.jpg)
+![](img/11. Filter Time Period.jpg){width=60%}
 
 
 
@@ -147,13 +147,13 @@ The data was first cleaned and prepared using Tableau Prep Builder and then load
 2. Under settings, apply two join clauses: Period and Country. Change the join type to ‘Right’ (i.e. ensure the entire ‘Clean 1’ circle is shaded in the venn diagram. Output should be a total of 13,320 values.
 3. Remove duplicated fields
 
-![](img/12. Remove Duplicate.JPG)
+![](img/12. Remove Duplicate.JPG){width=70%}
 
 
 4.	For both Export and Import values, use the function ZN() to convert null values to 0.
 
 
-![](img/13. ZN function.jpg)
+![](img/13. ZN function.jpg){width=50%}
 
 
 5. Create an aggregate step.
@@ -161,22 +161,22 @@ The data was first cleaned and prepared using Tableau Prep Builder and then load
     a. Drag ‘Period’ and ‘Country’ to the Grouped Fields, and ‘Export’ and ‘Import’ to the Aggregated Fields.
 
 
-![](img/14. Aggregate.jpg)
+![](img/14. Aggregate.jpg){width=90%}
 
 
 
 
-    b.	Under the Period field in the Grouped Fields, convert dates to year number
+    b. Under the Period field in the Grouped Fields, convert dates to year number
     
-![](img/15. Convert to year.JPG)
+![](img/15. Convert to year.JPG){width=50%}
 
 
 
 
 
-    c.	In the top left hand corner of the Period field, click the icon and change the data type to ‘Date’.
+    c. In the top left hand corner of the Period field, click the icon and change the data type to ‘Date’.
     
-![](img/16. Change to Date Type.jpg){width=60%}
+![](img/16. Change to Date Type.jpg){width=40%}
 
 
 
@@ -220,19 +220,19 @@ Before we begin creating the visualizations proper, we will need to create sever
 
 To create a parameter, right-click on the tables pane and click ‘Create Parameter’. Enter the settings as per the screenshots.
 
-![](img/20. Create Parameter.JPG){width=60%}
+![](img/20. Create Parameter.JPG){width=50%}
 
 
 
 
 Rank By Parameter
 
-![](img/21. Rank by parameter.jpg)
+![](img/21. Rank by parameter.jpg){width=60%}
 
 
 Top N Partners
 
-![](img/22. Top N Parameter.jpg)
+![](img/22. Top N Parameter.jpg){width=60%}
 
 
 
@@ -242,76 +242,76 @@ To create a calculated field, right-click on the tables pane and click ‘Create
 
 Trade Volume
 
-![](img/23. Trade Vol Formula.jpg)
+![](img/23. Trade Vol Formula.jpg){width=70%}
 
 Trade Rank
 
-![](img/24. Trade Rank Formula.jpg)
+![](img/24. Trade Rank Formula.jpg){width=70%}
 
 Net Trade Value
 
-![](img/25. Net Trade Value Formula.jpg)
+![](img/25. Net Trade Value Formula.jpg){width=70%}
 
 Net Trade Import
 
-![](img/26. Net Trade Import Formula.jpg)
+![](img/26. Net Trade Import Formula.jpg){width=70%}
 
 Net Trade Import (Binary)
 
 
-![](img/27. Net Trade Import Binary.jpg)
+![](img/27. Net Trade Import Binary.jpg){width=70%}
 
 
 Net Trade Export
 
 
-![](img/28. Net Trade Export.jpg)
+![](img/28. Net Trade Export.jpg){width=70%}
 
 
 
 Net Trade Export (Binary)
 
 
-![](img/29. Net Trade Export Binary.jpg)
+![](img/29. Net Trade Export Binary.jpg){width=70%}
 
 
 Net Importer Rank
 
 
-![](img/30. Net Importer Rank.jpg)
+![](img/30. Net Importer Rank.jpg){width=70%}
 
 Net Exporter Rank
 
-![](img/31. Net Exporter Rank.jpg)
+![](img/31. Net Exporter Rank.jpg){width=70%}
 
 
 Sorting
 
-![](img/32. Sorting.jpg)
+![](img/32. Sorting.jpg){width=70%}
 
 
 Net Importer
 
 
-![](img/33. Net Importer.jpg)
+![](img/33. Net Importer.jpg){width=70%}
 
 
 Net Exporter
 
 
-![](img/34. Net Exporter.jpg)
+![](img/34. Net Exporter.jpg){width=70%}
 
 
 Import (Name)
 
 
-![](img/35. Import Name.jpg)
+![](img/35. Import Name.jpg){width=70%}
 
 
 Export (Name)
 
 
-![](img/36. Export Name.jpg)
+![](img/36. Export Name.jpg){width=70%}
 
 
 
@@ -331,7 +331,7 @@ Export (Name)
 2.	For each of the highlighted axis in the previous screenshot (Import Y-axis and Export X-axis), right-click on the axis and select ‘Edit Axis’. Select ‘Fixed’ Range and key in the range start and end as per the screenshot below.
 
 
-![](img/38. Scatter 2.JPG)
+![](img/38. Scatter 2.JPG){width=60%}
 
 
 
@@ -383,7 +383,7 @@ Export (Name)
 
 
 
-![](img/44. Scatter 8.JPG){width=50%}
+![](img/44. Scatter 8.JPG){width=40%}
 
 
 
@@ -446,7 +446,7 @@ Export (Name)
 
 
 
-![](img/50. Bar 3.JPG)
+![](img/50. Bar 3.JPG){width=60%}
 
 
 
@@ -466,7 +466,7 @@ Export (Name)
     a.	‘All’ Mark Group
 
 
-![](img/52. Bar 5.JPG){width=50%}
+![](img/52. Bar 5.JPG){width=40%}
 
 
 
@@ -482,7 +482,7 @@ Export (Name)
     c.	‘Net Trade (Import)’ Mark Group. Additionally, click on the color button and adjust the colour to the following settings:
     
     
-![](img/54. Bar 7.JPG)
+![](img/54. Bar 7.JPG){width=70%}
 
 
 
@@ -609,7 +609,11 @@ Voila! We have created our first dashboard! Visit this link to access the dashbo
 
 
 
-3.	Singapore has consistently been a high importer of goods and services from Taiwan, Saudi Arabia and United States. In the last 10 years, these 3 countries have managed to be in the Top 5 Net Importer rankings in all but one year (Taiwan in 2011, Saudi Arabia in 2019 and United States in 2020).
+3.	Singapore has consistently been a high importer of goods and services from Taiwan, Saudi Arabia and United States. In the last 10 years, these 3 countries have managed to be in the Top 5 Net Importer rankings in all but one year (Taiwan in 2011, Saudi Arabia in 2019 and United States in 2020). According to [World Integrated Trade Solution](https://wits.worldbank.org/CountryProfile/en/Country/SGP/Year/2019/TradeFlow/Import) and [World's Richest Countries](http://www.worldsrichestcountries.com/top_singapore_imports.html), the largest category of imported goods from each country are:
+
+    * United States - Machinery and Electrical
+    * Saudi Arabia - Fuels
+    * Taiwan - Electronic Equipment
 
 
 ![](img/69. Obs 3.JPG)

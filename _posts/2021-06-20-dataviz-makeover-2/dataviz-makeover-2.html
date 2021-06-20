@@ -1558,41 +1558,41 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <li><p>Rename the fields accordingly</p></li>
 <li><p>Create a calculated field to derive the actual value of each row</p></li>
 </ol>
-<p><img src="img/8.%20Rename%20and%20Calculate%20Import.JPG" /></p>
+<p><img src="img/8.%20Rename%20and%20Calculate%20Import.JPG" style="width:70.0%" /></p>
 <ol start="3" type="1">
 <li>Use the filter function to exclude continents</li>
 </ol>
-<p><img src="img/9.%20Exclude%20Continents.jpg" /></p>
+<p><img src="img/9.%20Exclude%20Continents.jpg" style="width:60.0%" /></p>
 <ol start="4" type="1">
 <li>Convert the ‘Year Month’ field into a date time format</li>
 </ol>
-<p><img src="img/10.%20Convert%20to%20DateTime.jpg" /></p>
+<p><img src="img/10.%20Convert%20to%20DateTime.jpg" style="width:60.0%" /></p>
 <ol start="5" type="1">
 <li>Filter for the time period we want.</li>
 </ol>
-<p><img src="img/11.%20Filter%20Time%20Period.jpg" /></p>
+<p><img src="img/11.%20Filter%20Time%20Period.jpg" style="width:60.0%" /></p>
 <h2 id="joining-tables">4.4 Joining Tables</h2>
 <ol type="1">
 <li>Add a new step to join the two cleaned tables.</li>
 <li>Under settings, apply two join clauses: Period and Country. Change the join type to ‘Right’ (i.e. ensure the entire ‘Clean 1’ circle is shaded in the venn diagram. Output should be a total of 13,320 values.</li>
 <li>Remove duplicated fields</li>
 </ol>
-<p><img src="img/12.%20Remove%20Duplicate.JPG" /></p>
+<p><img src="img/12.%20Remove%20Duplicate.JPG" style="width:70.0%" /></p>
 <ol start="4" type="1">
 <li>For both Export and Import values, use the function ZN() to convert null values to 0.</li>
 </ol>
-<p><img src="img/13.%20ZN%20function.jpg" /></p>
+<p><img src="img/13.%20ZN%20function.jpg" style="width:50.0%" /></p>
 <ol start="5" type="1">
 <li><p>Create an aggregate step.</p>
 <ol type="a">
 <li>Drag ‘Period’ and ‘Country’ to the Grouped Fields, and ‘Export’ and ‘Import’ to the Aggregated Fields.</li>
 </ol></li>
 </ol>
-<p><img src="img/14.%20Aggregate.jpg" /></p>
-<pre><code>b.  Under the Period field in the Grouped Fields, convert dates to year number</code></pre>
-<p><img src="img/15.%20Convert%20to%20year.JPG" /></p>
-<pre><code>c.  In the top left hand corner of the Period field, click the icon and change the data type to ‘Date’.</code></pre>
-<p><img src="img/16.%20Change%20to%20Date%20Type.jpg" style="width:60.0%" /></p>
+<p><img src="img/14.%20Aggregate.jpg" style="width:90.0%" /></p>
+<pre><code>b. Under the Period field in the Grouped Fields, convert dates to year number</code></pre>
+<p><img src="img/15.%20Convert%20to%20year.JPG" style="width:50.0%" /></p>
+<pre><code>c. In the top left hand corner of the Period field, click the icon and change the data type to ‘Date’.</code></pre>
+<p><img src="img/16.%20Change%20to%20Date%20Type.jpg" style="width:40.0%" /></p>
 <h2 id="run-output-flow">4.5 Run Output Flow</h2>
 <ol type="1">
 <li>Add an Output step and click ‘Run Flow’ to save the data as a Tableau Data Extract (.hyper)</li>
@@ -1613,41 +1613,41 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <p>Before we begin creating the visualizations proper, we will need to create several calculated fields and parameters that will help us with generating the visuals we want. Follow the formulas below to create the new fields / parameters</p>
 <p><strong>Parameters</strong></p>
 <p>To create a parameter, right-click on the tables pane and click ‘Create Parameter’. Enter the settings as per the screenshots.</p>
-<p><img src="img/20.%20Create%20Parameter.JPG" style="width:60.0%" /></p>
+<p><img src="img/20.%20Create%20Parameter.JPG" style="width:50.0%" /></p>
 <p>Rank By Parameter</p>
-<p><img src="img/21.%20Rank%20by%20parameter.jpg" /></p>
+<p><img src="img/21.%20Rank%20by%20parameter.jpg" style="width:60.0%" /></p>
 <p>Top N Partners</p>
-<p><img src="img/22.%20Top%20N%20Parameter.jpg" /></p>
+<p><img src="img/22.%20Top%20N%20Parameter.jpg" style="width:60.0%" /></p>
 <p><strong>Calculated Fields</strong></p>
 <p>To create a calculated field, right-click on the tables pane and click ‘Create Calculated Field’. Enter the formulas as per the screenshots.</p>
 <p>Trade Volume</p>
-<p><img src="img/23.%20Trade%20Vol%20Formula.jpg" /></p>
+<p><img src="img/23.%20Trade%20Vol%20Formula.jpg" style="width:70.0%" /></p>
 <p>Trade Rank</p>
-<p><img src="img/24.%20Trade%20Rank%20Formula.jpg" /></p>
+<p><img src="img/24.%20Trade%20Rank%20Formula.jpg" style="width:70.0%" /></p>
 <p>Net Trade Value</p>
-<p><img src="img/25.%20Net%20Trade%20Value%20Formula.jpg" /></p>
+<p><img src="img/25.%20Net%20Trade%20Value%20Formula.jpg" style="width:70.0%" /></p>
 <p>Net Trade Import</p>
-<p><img src="img/26.%20Net%20Trade%20Import%20Formula.jpg" /></p>
+<p><img src="img/26.%20Net%20Trade%20Import%20Formula.jpg" style="width:70.0%" /></p>
 <p>Net Trade Import (Binary)</p>
-<p><img src="img/27.%20Net%20Trade%20Import%20Binary.jpg" /></p>
+<p><img src="img/27.%20Net%20Trade%20Import%20Binary.jpg" style="width:70.0%" /></p>
 <p>Net Trade Export</p>
-<p><img src="img/28.%20Net%20Trade%20Export.jpg" /></p>
+<p><img src="img/28.%20Net%20Trade%20Export.jpg" style="width:70.0%" /></p>
 <p>Net Trade Export (Binary)</p>
-<p><img src="img/29.%20Net%20Trade%20Export%20Binary.jpg" /></p>
+<p><img src="img/29.%20Net%20Trade%20Export%20Binary.jpg" style="width:70.0%" /></p>
 <p>Net Importer Rank</p>
-<p><img src="img/30.%20Net%20Importer%20Rank.jpg" /></p>
+<p><img src="img/30.%20Net%20Importer%20Rank.jpg" style="width:70.0%" /></p>
 <p>Net Exporter Rank</p>
-<p><img src="img/31.%20Net%20Exporter%20Rank.jpg" /></p>
+<p><img src="img/31.%20Net%20Exporter%20Rank.jpg" style="width:70.0%" /></p>
 <p>Sorting</p>
-<p><img src="img/32.%20Sorting.jpg" /></p>
+<p><img src="img/32.%20Sorting.jpg" style="width:70.0%" /></p>
 <p>Net Importer</p>
-<p><img src="img/33.%20Net%20Importer.jpg" /></p>
+<p><img src="img/33.%20Net%20Importer.jpg" style="width:70.0%" /></p>
 <p>Net Exporter</p>
-<p><img src="img/34.%20Net%20Exporter.jpg" /></p>
+<p><img src="img/34.%20Net%20Exporter.jpg" style="width:70.0%" /></p>
 <p>Import (Name)</p>
-<p><img src="img/35.%20Import%20Name.jpg" /></p>
+<p><img src="img/35.%20Import%20Name.jpg" style="width:70.0%" /></p>
 <p>Export (Name)</p>
-<p><img src="img/36.%20Export%20Name.jpg" /></p>
+<p><img src="img/36.%20Export%20Name.jpg" style="width:70.0%" /></p>
 <h2 id="makeover-original-visualization">5.2 Makeover Original Visualization</h2>
 <ol type="1">
 <li><p>Drag the following measures and dimensions into the following locations:</p>
@@ -1661,7 +1661,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <ol start="2" type="1">
 <li>For each of the highlighted axis in the previous screenshot (Import Y-axis and Export X-axis), right-click on the axis and select ‘Edit Axis’. Select ‘Fixed’ Range and key in the range start and end as per the screenshot below.</li>
 </ol>
-<p><img src="img/38.%20Scatter%202.JPG" /></p>
+<p><img src="img/38.%20Scatter%202.JPG" style="width:60.0%" /></p>
 <ol start="3" type="1">
 <li>Right-click on the Export Y-axis and select ‘Dual Axis’ option. Result should look like this:</li>
 </ol>
@@ -1685,7 +1685,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <ol start="8" type="1">
 <li>Under the ‘SUM(Import)’ Marks group, drag the following fields into the ‘Tooltip’ box:</li>
 </ol>
-<p><img src="img/44.%20Scatter%208.JPG" style="width:50.0%" /></p>
+<p><img src="img/44.%20Scatter%208.JPG" style="width:40.0%" /></p>
 <ol start="9" type="1">
 <li>Under the ‘SUM(Import)’ Marks group, change mark type to ‘Circle’, drag ‘Country’ to ‘Label’ and drag ‘Net Trade (Value)’ to ‘Color’. Under the colour legend settings adjust the settings as per the screenshot (see below). Subsequently, hide the colour legend card.</li>
 </ol>
@@ -1719,7 +1719,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <li>For IMPORT AXIS ONLY, check the ‘Reversed’ option under scale.</li>
 </ol></li>
 </ol>
-<p><img src="img/50.%20Bar%203.JPG" /></p>
+<p><img src="img/50.%20Bar%203.JPG" style="width:60.0%" /></p>
 <ol start="5" type="1">
 <li>Under each of the Net Trade (Import and Export) marks, click on the size option and reduce the size of the bars, until about half the size of the Import / Export bars. Result should look something like the screenshot below. Once complete, under the ‘All’ Marks section remove measure names from the color mark.</li>
 </ol>
@@ -1730,11 +1730,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <li>‘All’ Mark Group</li>
 </ol></li>
 </ol>
-<p><img src="img/52.%20Bar%205.JPG" style="width:50.0%" /></p>
+<p><img src="img/52.%20Bar%205.JPG" style="width:40.0%" /></p>
 <pre><code>b.  ‘Import’ Mark Group</code></pre>
 <p><img src="img/53.%20Bar%206.JPG" style="width:50.0%" /></p>
 <pre><code>c.  ‘Net Trade (Import)’ Mark Group. Additionally, click on the color button and adjust the colour to the following settings:</code></pre>
-<p><img src="img/54.%20Bar%207.JPG" /></p>
+<p><img src="img/54.%20Bar%207.JPG" style="width:70.0%" /></p>
 <pre><code>d.  ‘Export’ Mark Group</code></pre>
 <p><img src="img/55.%20Bar%208.JPG" style="width:50.0%" /></p>
 <pre><code>e.  ‘Net Trade (Export)’ Mark Group. Additionally, click on the color button and adjust the colour to the following settings:</code></pre>
@@ -1796,7 +1796,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </ol>
 <p><img src="img/68.%20Obs%202.JPG" /></p>
 <ol start="3" type="1">
-<li>Singapore has consistently been a high importer of goods and services from Taiwan, Saudi Arabia and United States. In the last 10 years, these 3 countries have managed to be in the Top 5 Net Importer rankings in all but one year (Taiwan in 2011, Saudi Arabia in 2019 and United States in 2020).</li>
+<li><p>Singapore has consistently been a high importer of goods and services from Taiwan, Saudi Arabia and United States. In the last 10 years, these 3 countries have managed to be in the Top 5 Net Importer rankings in all but one year (Taiwan in 2011, Saudi Arabia in 2019 and United States in 2020). According to <a href="https://wits.worldbank.org/CountryProfile/en/Country/SGP/Year/2019/TradeFlow/Import">World Integrated Trade Solution</a> and <a href="http://www.worldsrichestcountries.com/top_singapore_imports.html">World’s Richest Countries</a>, the largest category of imported goods from each country are:</p>
+<ul>
+<li>United States - Machinery and Electrical</li>
+<li>Saudi Arabia - Fuels</li>
+<li>Taiwan - Electronic Equipment</li>
+</ul></li>
 </ol>
 <p><img src="img/69.%20Obs%203.JPG" /></p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>

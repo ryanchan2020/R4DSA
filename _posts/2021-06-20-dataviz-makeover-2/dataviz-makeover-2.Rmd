@@ -497,7 +497,7 @@ Export (Name)
     e.	‘Net Trade (Export)’ Mark Group. Additionally, click on the color button and adjust the colour to the following settings:
 
 
-![](img/56. Bar 9.JPG)
+![](img/56. Bar 9.JPG){width=70%}
 
 
 
@@ -541,7 +541,7 @@ Export (Name)
 
 
 
-![](img/61. Bar 14.JPG)
+![](img/61. Bar 14.JPG){width=70%}
 
 
 

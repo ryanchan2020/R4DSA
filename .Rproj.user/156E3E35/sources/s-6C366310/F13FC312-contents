@@ -1,9 +1,0 @@
----
-title: "About this blog"
-description: |
-  This blog displays the portfolio of Ryan Chan's ISSS608 Visual Analytics work
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-```

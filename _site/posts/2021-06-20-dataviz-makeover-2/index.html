@@ -117,7 +117,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"NULL"}
+  {"type":"character","attributes":{},"value":["dataviz-makeover-2_files/anchor-4.2.2/anchor.min.js","dataviz-makeover-2_files/bowser-1.9.3/bowser.min.js","dataviz-makeover-2_files/distill-2.2.21/template.v2.js","dataviz-makeover-2_files/header-attrs-2.7/header-attrs.js","dataviz-makeover-2_files/jquery-1.11.3/jquery.min.js","dataviz-makeover-2_files/popper-2.6.0/popper.min.js","dataviz-makeover-2_files/tippy-6.2.7/tippy-bundle.umd.min.js","dataviz-makeover-2_files/tippy-6.2.7/tippy-light-border.css","dataviz-makeover-2_files/tippy-6.2.7/tippy.css","dataviz-makeover-2_files/tippy-6.2.7/tippy.umd.min.js","dataviz-makeover-2_files/webcomponents-2.0.0/webcomponents.js","img/1. Original Visualization.png","img/10. Convert to DateTime.jpg","img/11. Filter Time Period.jpg","img/12. Remove Duplicate.JPG","img/13. ZN function.jpg","img/14. Aggregate.jpg","img/15. Convert to year.JPG","img/16. Change to Date Type.jpg","img/17. Run Output.JPG","img/18. Open File.jpg","img/19. Rename Scatterplot.jpg","img/2. Proposed Alternative.jpg","img/20. Create Parameter.JPG","img/21. Rank by parameter.jpg","img/22. Top N Parameter.jpg","img/23. Trade Vol Formula.jpg","img/24. Trade Rank Formula.jpg","img/25. Net Trade Value Formula.jpg","img/26. Net Trade Import Formula.jpg","img/27. Net Trade Import Binary.jpg","img/28. Net Trade Export.jpg","img/29. Net Trade Export Binary.jpg","img/3. Importing Data.JPG","img/30. Net Importer Rank.jpg","img/31. Net Exporter Rank.jpg","img/32. Sorting.jpg","img/33. Net Importer.jpg","img/34. Net Exporter.jpg","img/35. Import Name.jpg","img/36. Export Name.jpg","img/37. Scatter 1.JPG","img/38. Scatter 2.JPG","img/39. Scatter 3.JPG","img/4. Original Before Data Interpreter.jpg","img/40. Scatter 4.JPG","img/41. Scatter 5.JPG","img/42. Scatter 6.JPG","img/43. Scatter 7.JPG","img/44. Scatter 8.JPG","img/45. Scatter 9.JPG","img/46. Scatter 10.JPG","img/47. Scatter 11.JPG","img/48. Bar 1.JPG","img/49. Bar 2.JPG","img/5. After Data Interpreter.JPG","img/50. Bar 3.JPG","img/51. Bar 4.JPG","img/52. Bar 5.JPG","img/53. Bar 6.JPG","img/54. Bar 7.JPG","img/55. Bar 8.JPG","img/56. Bar 9.JPG","img/57. Bar 10.JPG","img/58. Bar 11.JPG","img/59. Bar 12.JPG","img/6. Pivoting Data.JPG","img/60. Bar 13.JPG","img/61. Bar 14.JPG","img/62. Bar 15.JPG","img/63. Bar 16.JPG","img/64. Dash 1.JPG","img/65. Dash 2.JPG","img/66. Dash 3.JPG","img/67. Obs 1.JPG","img/68. Obs 2.JPG","img/69. Obs 3.JPG","img/7. Add Clean Step.JPG","img/8. Rename and Calculate Import.JPG","img/9. Exclude Continents.jpg"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
 <meta name="distill:offset" content="../.."/>
@@ -2099,7 +2099,327 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <div class="d-article">
 <h1 id="original-visualization">1.0 ORIGINAL VISUALIZATION</h1>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<p><img src="img/1.%20Original%20Visualization.png" /></p>
+<p>The above chart shows a visualization depicting merchandising trade of Singapore’s trading partners from 2011-2020. The visualization comes from the Department of Statistics Singapore International Trade infographic page at <a href="https://www.singstat.gov.sg/modules/infographics/singapore-international-trade">https://www.singstat.gov.sg/modules/infographics/singapore-international-trade</a>, and the dataset can be downloaded from the under the sub-section of Merchandise Trade by <a href="https://www.singstat.gov.sg/find-data/search-by-theme/trade-and-investment/merchandise-trade/latest-data">Region/Market section</a> under ‘Download all in Excel’.</p>
+<p>Before we analyse the visualization, it is important to gain a clear understanding of the context of the visualization and the data it represents.</p>
+<ul>
+<li>Data represents Singapore’s trade values (Exports and Imports) with its top 10 trading partners, in year 2020.</li>
+<li>Visualization utilizes a scatterplot chart as the foundation, with export value on the X-axis and import value on the Y-axis. The size of each bubble / point indicates the total trade volume.</li>
+</ul>
+<h1 id="critique-of-visualization">2.0 CRITIQUE OF VISUALIZATION</h1>
+<h2 id="clarity">2.1 Clarity</h2>
+<ol type="1">
+<li><p>Using sized bubbles as the data points for a scatterplot chart makes it very hard for the user to accurately identify the exact origin point, any user who wants to estimate the export and import values will find it hard to do so. Furthermore, what is the point of assigning the total trade volume to size of the bubble, when it is intuitively clear that any point nearer to the top right of the chart will be huge and points nearer to the bottom left will be small?</p></li>
+<li><p>The chart only states the total trade amount for each trading partner, there is no clear labelling or indication of the exact export and import values.</p></li>
+<li><p>When mouse is hovered over a trading partner, that corresponding bubble selection will move to be on the front most panel, and potentially obscure the other bubbles and their trade amounts. This is not friendly to a user who would like to compare two partners’ trade amounts.</p></li>
+</ol>
+<p>##2.2 Aesthetics</p>
+<ol type="1">
+<li><p>The size of each bubble is too huge and unnecessary, and only serves to contribute to the obscuring problem mentioned above.</p></li>
+<li><p>There is a default overlay position where if left untouched some bubbles are always on top of other bubbles. However, when a mouse is hovered over a particular bubble the bubble will come to the front, only for it disappear to the back again once the mouse has left the bubble. This can be an eyesore for a user who is having to move his / her mouse around the chart and constantly seeing bubbles ‘popping’ and ‘disappearing’ in quick fashion.</p></li>
+<li><p>The use of colours seem to be arbitrary in this chart, there is no clear function that each colours serves except to differentiate each country. This is never good practice, to implement a functionality that does not help the user in any way in his / her analysis of the data.</p></li>
+</ol>
+<h1 id="proposed-alternative-design">3.0 Proposed Alternative Design</h1>
+<p><img src="img/2.%20Proposed%20Alternative.jpg" /></p>
+<p>Two charts are introduced.</p>
+<ol type="1">
+<li><p>The chart on the left retains the foundation build of the original visualization, with several tweaks.</p>
+<ul>
+<li>It is still a scatterplot with each dot representing the export and import values for each trading partner.</li>
+<li>The size function from the original visualization are discarded, so the chart will not be so convoluted.</li>
+<li>A 45-degree reference line is created such that any point above the line is a Net Importer and any point below the line is a Net Exporter.</li>
+<li>Two colours are introduced, green for partners that are net exporters and red for partners that are net importers.</li>
+<li>Tooltips will include useful information such as total trade volume, whether partner is a net exporter or importer, net (export / import) trade value and export / import values.</li>
+</ul></li>
+<li><p>The chart on the right is a combination of bar charts.</p>
+<ul>
+<li>Each row on the chart represents a trading partner.</li>
+<li>For each row, the partner’s import value will be shown as a reversed horizontal bar on the left, and export value as a normal horizontal bar on the right.</li>
+<li>Within the bars of each row, a corresponding net trade value will be shown (i.e. if partner is a net exporter, a smaller bar representing the net export trade value will appear within the export bar with a label to indicate the net trade value)</li>
+<li>Net exporters will have their export bars highlighted in green, while net importers will have their import bars highlighted in red.</li>
+<li>Tooltips will include useful information such as total trade volume, whether partner is a net exporter or importer, their net exporter / importer rank, net (export / import) trade value and export / import values.</li>
+</ul></li>
+<li><p>Several controls will be utilized for the user to interact with the visualization</p>
+<ul>
+<li>A year slider will allow user to scroll through the data by year</li>
+<li>A country filter will allow user to select only specific partners he / she wants to see, or to exclude certain specific partners</li>
+<li>‘Top N Partners’ allows typed-in integers that will limit both charts to showing a limited amount of countries, based on the selected ranking type</li>
+<li>‘Rank By’ is a parameter allowing user to select Top N Partners based on the following rank types: Total Trade, Net Exporter and Net Importer. This function will also change the order of partners that the right chart displays, with the highest value partner on top.</li>
+</ul></li>
+</ol>
+<h1 id="data-preparation">4.0 DATA PREPARATION</h1>
+<p>The data was first cleaned and prepared using Tableau Prep Builder and then loaded into and visualized using Tableau.</p>
+<h2 id="importing-data">4.1 Importing Data</h2>
+<ol type="1">
+<li><p>Create a connection to the data source.</p></li>
+<li><p>Drag the tables (T1 and T2) to edit into the canvas to start their respective flows. From this point onwards, both tables shall be handled in the same manner until the moment they are joined.</p></li>
+<li><p>Tick the ‘Use Data Interpreter’ check box.</p></li>
+</ol>
+<p><img src="img/3.%20Importing%20Data.JPG" style="width:60.0%" /></p>
+<ol start="4" type="1">
+<li>Tableau’s Data Interpreter will try its best to figure out the underlying table structure in each worksheet. The result of cleaning with Data Interpreter are as follows:</li>
+</ol>
+<p><strong>Original</strong></p>
+<p><img src="img/4.%20Original%20Before%20Data%20Interpreter.jpg" /></p>
+<p><strong>After Data Interpreter is Used</strong></p>
+<p><img src="img/5.%20After%20Data%20Interpreter.JPG" /></p>
+<h2 id="pivoting-data">4.2 Pivoting Data</h2>
+<ol type="1">
+<li><p>Click on the ‘+’ sign beside the table and select ‘Pivot’</p></li>
+<li><p>On the left panel, select all fields except ‘Subject: Merchandise Trade’ and drag them to the ‘Pivoted Fields’ pane.</p></li>
+</ol>
+<p><img src="img/6.%20Pivoting%20Data.JPG" style="width:70.0%" /></p>
+<ol start="3" type="1">
+<li>After pivoting the relevant fields, add another step to ‘clean’ data.</li>
+</ol>
+<p><img src="img/7.%20Add%20Clean%20Step.JPG" style="width:60.0%" /></p>
+<h2 id="cleaning-data">4.3 Cleaning Data</h2>
+<ol type="1">
+<li><p>Rename the fields accordingly</p></li>
+<li><p>Create a calculated field to derive the actual value of each row</p></li>
+</ol>
+<p><img src="img/8.%20Rename%20and%20Calculate%20Import.JPG" /></p>
+<ol start="3" type="1">
+<li>Use the filter function to exclude continents</li>
+</ol>
+<p><img src="img/9.%20Exclude%20Continents.jpg" /></p>
+<ol start="4" type="1">
+<li>Convert the ‘Year Month’ field into a date time format</li>
+</ol>
+<p><img src="img/10.%20Convert%20to%20DateTime.jpg" /></p>
+<ol start="5" type="1">
+<li>Filter for the time period we want.</li>
+</ol>
+<p><img src="img/11.%20Filter%20Time%20Period.jpg" /></p>
+<h2 id="joining-tables">4.4 Joining Tables</h2>
+<ol type="1">
+<li>Add a new step to join the two cleaned tables.</li>
+<li>Under settings, apply two join clauses: Period and Country. Change the join type to ‘Right’ (i.e. ensure the entire ‘Clean 1’ circle is shaded in the venn diagram. Output should be a total of 13,320 values.</li>
+<li>Remove duplicated fields</li>
+</ol>
+<p><img src="img/12.%20Remove%20Duplicate.JPG" /></p>
+<ol start="4" type="1">
+<li>For both Export and Import values, use the function ZN() to convert null values to 0.</li>
+</ol>
+<p><img src="img/13.%20ZN%20function.jpg" /></p>
+<ol start="5" type="1">
+<li><p>Create an aggregate step.</p>
+<ol type="a">
+<li>Drag ‘Period’ and ‘Country’ to the Grouped Fields, and ‘Export’ and ‘Import’ to the Aggregated Fields.</li>
+</ol></li>
+</ol>
+<p><img src="img/14.%20Aggregate.jpg" /></p>
+<pre><code>b.  Under the Period field in the Grouped Fields, convert dates to year number</code></pre>
+<p><img src="img/15.%20Convert%20to%20year.JPG" /></p>
+<pre><code>c.  In the top left hand corner of the Period field, click the icon and change the data type to ‘Date’.</code></pre>
+<p><img src="img/16.%20Change%20to%20Date%20Type.jpg" style="width:60.0%" /></p>
+<h2 id="run-output-flow">4.5 Run Output Flow</h2>
+<ol type="1">
+<li>Add an Output step and click ‘Run Flow’ to save the data as a Tableau Data Extract (.hyper)</li>
+</ol>
+<p><img src="img/17.%20Run%20Output.JPG" /></p>
+<h1 id="data-makeover-with-tableau">5. DATA MAKEOVER WITH TABLEAU</h1>
+<h2 id="preparation">5.1 Preparation</h2>
+<h3 id="importing-data-into-tableau">5.1.1 Importing Data into Tableau</h3>
+<ol type="1">
+<li>Launch Tableau Desktop, and under the ‘Connect To a File’ section select ‘More’. Navigate to the Tableau Data Extract file we have just saved.</li>
+</ol>
+<p><img src="img/18.%20Open%20File.jpg" /></p>
+<ol start="2" type="1">
+<li>Result of the connection. Rename ‘Sheet 1’ to ‘Scatterplot’. Navigate to ‘Scatterplot’ to begin makeover.</li>
+</ol>
+<p><img src="img/19.%20Rename%20Scatterplot.jpg" /></p>
+<h3 id="create-calculated-fields-parameters">5.1.2 Create Calculated Fields / Parameters</h3>
+<p>Before we begin creating the visualizations proper, we will need to create several calculated fields and parameters that will help us with generating the visuals we want. Follow the formulas below to create the new fields / parameters</p>
+<p><strong>Parameters</strong></p>
+<p>To create a parameter, right-click on the tables pane and click ‘Create Parameter’. Enter the settings as per the screenshots.</p>
+<p><img src="img/20.%20Create%20Parameter.JPG" style="width:60.0%" /></p>
+<p>Rank By Parameter</p>
+<p><img src="img/21.%20Rank%20by%20parameter.jpg" /></p>
+<p>Top N Partners</p>
+<p><img src="img/22.%20Top%20N%20Parameter.jpg" /></p>
+<p><strong>Calculated Fields</strong></p>
+<p>To create a calculated field, right-click on the tables pane and click ‘Create Calculated Field’. Enter the formulas as per the screenshots.</p>
+<p>Trade Volume</p>
+<p><img src="img/23.%20Trade%20Vol%20Formula.jpg" /></p>
+<p>Trade Rank</p>
+<p><img src="img/24.%20Trade%20Rank%20Formula.jpg" /></p>
+<p>Net Trade Value</p>
+<p><img src="img/25.%20Net%20Trade%20Value%20Formula.jpg" /></p>
+<p>Net Trade Import</p>
+<p><img src="img/26.%20Net%20Trade%20Import%20Formula.jpg" /></p>
+<p>Net Trade Import (Binary)</p>
+<p><img src="img/27.%20Net%20Trade%20Import%20Binary.jpg" /></p>
+<p>Net Trade Export</p>
+<p><img src="img/28.%20Net%20Trade%20Export.jpg" /></p>
+<p>Net Trade Export (Binary)</p>
+<p><img src="img/29.%20Net%20Trade%20Export%20Binary.jpg" /></p>
+<p>Net Importer Rank</p>
+<p><img src="img/30.%20Net%20Importer%20Rank.jpg" /></p>
+<p>Net Exporter Rank</p>
+<p><img src="img/31.%20Net%20Exporter%20Rank.jpg" /></p>
+<p>Sorting</p>
+<p><img src="img/32.%20Sorting.jpg" /></p>
+<p>Net Importer</p>
+<p><img src="img/33.%20Net%20Importer.jpg" /></p>
+<p>Net Exporter</p>
+<p><img src="img/34.%20Net%20Exporter.jpg" /></p>
+<p>Import (Name)</p>
+<p><img src="img/35.%20Import%20Name.jpg" /></p>
+<p>Export (Name)</p>
+<p><img src="img/36.%20Export%20Name.jpg" /></p>
+<h2 id="makeover-original-visualization">5.2 Makeover Original Visualization</h2>
+<ol type="1">
+<li><p>Drag the following measures and dimensions into the following locations:</p>
+<ol type="a">
+<li>Export to Columns</li>
+<li>Import to Columns, then Export to Columns</li>
+<li>Country to Detail Mark</li>
+</ol></li>
+</ol>
+<p><img src="img/37.%20Scatter%201.JPG" /></p>
+<ol start="2" type="1">
+<li>For each of the highlighted axis in the previous screenshot (Import Y-axis and Export X-axis), right-click on the axis and select ‘Edit Axis’. Select ‘Fixed’ Range and key in the range start and end as per the screenshot below.</li>
+</ol>
+<p><img src="img/38.%20Scatter%202.JPG" /></p>
+<ol start="3" type="1">
+<li>Right-click on the Export Y-axis and select ‘Dual Axis’ option. Result should look like this:</li>
+</ol>
+<p><img src="img/39.%20Scatter%203.JPG" /></p>
+<ol start="4" type="1">
+<li>Remove ‘Measure Names’ from the Color Mark, and right-click on the Export Y-axis and select ‘Synchronise Axis’, and then uncheck the ‘Show Header’ button. You should see a 45-degree diagonal line of data points (see below). Under the Marks for SUM(Export), edit the size and colour of the data points, making the size the smallest, and setting the colours to transparent.</li>
+</ol>
+<p><img src="img/40.%20Scatter%204.JPG" /></p>
+<ol start="5" type="1">
+<li>Right-click anywhere in the chart area and navigate to ‘Trend Lines’, then ‘Show Trend Lines’, then select ‘SUM(Export)’. Result should look like this:</li>
+</ol>
+<p><img src="img/41.%20Scatter%205.JPG" /></p>
+<ol start="6" type="1">
+<li>Drag ‘Period’ to Filter and select filter by ‘Year’. When the filter settings page open up, select ‘Use all’ under the ‘General’ tab and click ok. Right-click on the ‘YEAR’ filter and navigate to Apply to Worksheets, and select ‘All Using This Data Source’.</li>
+</ol>
+<p><img src="img/42.%20Scatter%206.JPG" /></p>
+<ol start="7" type="1">
+<li>Drag ‘Country’ to Filter. When the filter settings page open up, navigate to the ‘Top’ tab and enter the settings as follows:</li>
+</ol>
+<p><img src="img/43.%20Scatter%207.JPG" style="width:60.0%" /></p>
+<ol start="8" type="1">
+<li>Under the ‘SUM(Import)’ Marks group, drag the following fields into the ‘Tooltip’ box:</li>
+</ol>
+<p><img src="img/44.%20Scatter%208.JPG" style="width:50.0%" /></p>
+<ol start="9" type="1">
+<li>Under the ‘SUM(Import)’ Marks group, change mark type to ‘Circle’, drag ‘Country’ to ‘Label’ and drag ‘Net Trade (Value)’ to ‘Color’. Under the colour legend settings adjust the settings as per the screenshot (see below). Subsequently, hide the colour legend card.</li>
+</ol>
+<p><img src="img/45.%20Scatter%209.JPG" /></p>
+<ol start="10" type="1">
+<li>Click on the ‘Tooltip’ under the ‘SUM(Import)’ Marks and enter the following message into the tooltip:</li>
+</ol>
+<p><img src="img/46.%20Scatter%2010.JPG" /></p>
+<ol start="11" type="1">
+<li>Change the chart title to ‘Trade Volume by Exports / Imports’. Our first chart is completed. End Result should look like this:</li>
+</ol>
+<p><img src="img/47.%20Scatter%2011.JPG" /></p>
+<h2 id="create-trade-rankings-bar-chart">5.3 Create Trade Rankings Bar Chart</h2>
+<ol type="1">
+<li><p>Create a new worksheet and rename it to ‘Bar’. Drag the following measures and dimensions to the following locations:</p>
+<ol type="a">
+<li>Import, Net Trade (Import), Export, Net Trade (Export) into Columns in this order</li>
+<li>Country into Rows</li>
+<li>Note: Filters should already automatically appear as we set filter in previous worksheet to apply to all charts using the same data source.</li>
+</ol></li>
+<li><p>For each of the Net Trade measure (Import and Export), right-click on the measure and select ‘Dual Axis’ option.</p></li>
+</ol>
+<p><img src="img/48.%20Bar%201.JPG" /></p>
+<ol start="3" type="1">
+<li>Result should look like the screenshot below. Right-click on Net Trade (Import and Export) axes and select ‘Synchronize Axis’, then uncheck ‘Show Header’.</li>
+</ol>
+<p><img src="img/49.%20Bar%202.JPG" /></p>
+<ol start="4" type="1">
+<li><p>Right-click on the Import and Export Axes and click ‘Edit Axis’. Select ‘Fixed’ Range and key in the range start and end as per the screenshot below.</p>
+<ol type="a">
+<li>For IMPORT AXIS ONLY, check the ‘Reversed’ option under scale.</li>
+</ol></li>
+</ol>
+<p><img src="img/50.%20Bar%203.JPG" /></p>
+<ol start="5" type="1">
+<li>Under each of the Net Trade (Import and Export) marks, click on the size option and reduce the size of the bars, until about half the size of the Import / Export bars. Result should look something like the screenshot below. Once complete, under the ‘All’ Marks section remove measure names from the color mark.</li>
+</ol>
+<p><img src="img/51.%20Bar%204.JPG" /></p>
+<ol start="6" type="1">
+<li><p>Add the following measures and dimensions into the following Mark groups:</p>
+<ol type="a">
+<li>‘All’ Mark Group</li>
+</ol></li>
+</ol>
+<p><img src="img/52.%20Bar%205.JPG" style="width:50.0%" /></p>
+<pre><code>b.  ‘Import’ Mark Group</code></pre>
+<p><img src="img/53.%20Bar%206.JPG" style="width:50.0%" /></p>
+<pre><code>c.  ‘Net Trade (Import)’ Mark Group. Additionally, click on the color button and adjust the colour to the following settings:</code></pre>
+<p><img src="img/54.%20Bar%207.JPG" /></p>
+<pre><code>d.  ‘Export’ Mark Group</code></pre>
+<p><img src="img/55.%20Bar%208.JPG" style="width:50.0%" /></p>
+<pre><code>e.  ‘Net Trade (Export)’ Mark Group. Additionally, click on the color button and adjust the colour to the following settings:</code></pre>
+<p><img src="img/56.%20Bar%209.JPG" /></p>
+<ol start="7" type="1">
+<li>The result should look like the below screenshot. Click on the color legend options to edit the colours.</li>
+</ol>
+<p><img src="img/57.%20Bar%2010.JPG" /></p>
+<ol start="8" type="1">
+<li>At the colour legend settings page, adjust the Import and Export bars’ colours to the following settings:</li>
+</ol>
+<p><img src="img/58.%20Bar%2011.JPG" /></p>
+<ol start="9" type="1">
+<li>At the ‘Export’ and ‘Import’ Mark Groups, click on colour and set the opacity to 35%.</li>
+</ol>
+<p><img src="img/59.%20Bar%2012.JPG" style="width:60.0%" /></p>
+<ol start="10" type="1">
+<li>Under the ‘All’ Marks Group, click ‘Tooltip’ and enter the following message into the tooltip:</li>
+</ol>
+<p><img src="img/60.%20Bar%2013.JPG" /></p>
+<ol start="11" type="1">
+<li><p>Right-click on the all the existing parameters (Rank By, Top N Partners) and filters (YEAR, Country) in the filter and parameter panes, and click ‘Show Parameter’ / ‘Show Filter’.</p>
+<ol type="a">
+<li>On the YEAR filter, navigate to the dropdown options and select ‘Single Value (slider)’</li>
+<li>On the Country filter, navigate to the dropdown options and select ‘Multiple Values (dropdown)’</li>
+<li>On the Top N Partners parameter, navigate to the dropdown options and select ‘Type In’</li>
+</ol></li>
+</ol>
+<p><img src="img/61.%20Bar%2014.JPG" /></p>
+<ol start="12" type="1">
+<li>Right-click on Country and select ‘Sort’. Enter the sort settings as follows using ‘Sorting’ as the field name.</li>
+</ol>
+<p><img src="img/62.%20Bar%2015.JPG" style="width:60.0%" /></p>
+<ol start="13" type="1">
+<li>Change the chart title to ‘Trading Rankings’. Our second chart is completed. End result should look like this:</li>
+</ol>
+<p><img src="img/63.%20Bar%2016.JPG" /></p>
+<h2 id="create-dashboard-and-combine-charts">5.4 Create Dashboard and Combine Charts</h2>
+<ol type="1">
+<li>In the pages tab at the bottom of the window, click ‘New Dashboard’ icon to open up a new dashboard.</li>
+</ol>
+<p><img src="img/64.%20Dash%201.JPG" /></p>
+<ol start="2" type="1">
+<li>Under the ‘Size’ options, select ‘Fixed Size’ and adjust size to ‘1366 x 768’.</li>
+</ol>
+<p><img src="img/65.%20Dash%202.JPG" style="width:50.0%" /></p>
+<ol start="3" type="1">
+<li>Drag and drop both the ‘Bar’ and ‘Scatterplot’ sheets into the dashboard, with the ‘Bar’ sheet on the right and ‘Scatterplot’ sheet on the left. From the Objects shelf on the bottom left corner, drag a text object and place it at the top of both charts. Give the chart a title and short description. The result should look something like this:</li>
+</ol>
+<p><img src="img/66.%20Dash%203.JPG" /></p>
+<p>Voila! We have created our first dashboard! Visit this link to access the dashboard on Tableau Public: <a href="https://public.tableau.com/app/profile/ryan.chan8444/viz/DataVizMakeover2_16241161747500/Dashboard1">https://public.tableau.com/app/profile/ryan.chan8444/viz/DataVizMakeover2_16241161747500/Dashboard1</a></p>
+<h1 id="major-observations">6. MAJOR OBSERVATIONS</h1>
+<ol type="1">
+<li>From 2011 to 2012, Malaysia was Singapore’s top trading partner, with total trade volumes of S$113 billion and S$115 billion respectively. However, from 2013 onwards, we see that Mainland China took over the top spot as Singapore’s top trading partner, growing from a trade volume of S$116 billion to a record high of S$137 billion in 2019, before dipping slightly to S$136 billion in 2020.</li>
+</ol>
+<p><img src="img/67.%20Obs%201.JPG" /></p>
+<ol start="2" type="1">
+<li>Interestingly, over the last 10 years Hong Kong has been consistently a top importer of Singapore’s goods and services. Singapore has managed to maintain a steady trade surplus of between S$50-60 billion during this period, never once falling outside this range.</li>
+</ol>
+<p><img src="img/68.%20Obs%202.JPG" /></p>
+<ol start="3" type="1">
+<li>Singapore has consistently been a high importer of goods and services from Taiwan, Saudi Arabia and United States. In the last 10 years, these 3 countries have managed to be in the Top 5 Net Importer rankings in all but one year (Taiwan in 2011, Saudi Arabia in 2019 and United States in 2020).</li>
+</ol>
+<p><img src="img/69.%20Obs%203.JPG" /></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>

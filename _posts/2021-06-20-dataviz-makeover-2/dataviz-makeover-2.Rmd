@@ -1,0 +1,23 @@
+---
+title: "DataViz Makeover 2 - Singapore Top Trading Partners, 2011-2020"
+description: |
+  A data visualization makeover and a Tableau tutorial for beginners.
+author:
+  - name: Ryan Chan
+    url: https://www.linkedin.com/in/ryan-chan-a7021b5/
+date: 06-20-2021
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+# 1.0 ORIGINAL VISUALIZATION
+
+
+

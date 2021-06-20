@@ -38,7 +38,7 @@ Before we analyse the visualization, it is important to gain a clear understandi
 
 3. When mouse is hovered over a trading partner, that corresponding bubble selection will move to be on the front most panel, and potentially obscure the other bubbles and their trade amounts. This is not friendly to a user who would like to compare two partners’ trade amounts.
 
-##2.2 Aesthetics
+## 2.2 Aesthetics
 
 1. The size of each bubble is too huge and unnecessary, and only serves to contribute to the obscuring problem mentioned above. 
 

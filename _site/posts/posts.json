@@ -1,5 +1,22 @@
 [
   {
+    "path": "posts/2021-06-20-dataviz-makeover-2/",
+    "title": "DataViz Makeover 2 - Singapore Top Trading Partners, 2011-2020",
+    "description": "A data visualization makeover and a Tableau tutorial for beginners.",
+    "author": [
+      {
+        "name": "Ryan Chan",
+        "url": "https://www.linkedin.com/in/ryan-chan-a7021b5/"
+      }
+    ],
+    "date": "2021-06-20",
+    "categories": [],
+    "contents": "\r\n1.0 ORIGINAL VISUALIZATION\r\n\r\n\r\n\r\n",
+    "preview": {},
+    "last_modified": "2021-06-20T22:31:50+08:00",
+    "input_file": "dataviz-makeover-2.utf8.md"
+  },
+  {
     "path": "posts/2021-05-22-dataviz-makeover-1/",
     "title": "DataViz Makeover 1 - Singapore International Trade",
     "description": "A data visualization makeover and a Tableau tutorial for beginners.",

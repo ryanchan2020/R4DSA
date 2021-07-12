@@ -1,0 +1,173 @@
+---
+title: "In-class-ex-08"
+description: |
+  Programming GeoVisual Analytics with R.
+author:
+  - name: Ryan Chan
+    url: https://www.linkedin.com/in/ryan-chan-a7021b5/
+date: 07-03-2021
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, error = FALSE)
+```
+
+Install required packages
+```{r}
+packages = c('raster','sf','clock','tidyverse','tmap')
+
+for(p in packages){
+if(!require(p, character.only = T)){
+  install.packages(p)
+  }
+  library(p, character.only = T)
+}
+```
+
+Read data
+```{r}
+
+bgmap <- raster("data/geospatial/MC2-tourist.tif")
+bgmap
+
+```
+
+
+
+```{r}
+
+tmap_mode("plot")
+tm_shape(bgmap) + 
+  tm_raster(bgmap,
+            legend.show = FALSE)
+
+```
+
+```{r}
+
+tm_shape(bgmap) +
+  tm_rgb(bgmap, r=1, g=2, b=3,
+         alpha = NA,
+         saturation = 1,
+         interpolate = TRUE,
+         max.value = 255)
+
+```
+
+```{r}
+
+Abila_st <- st_read(dsn = "data/Geospatial",
+                    layer = "Abila")
+
+```
+
+```{r}
+
+gps <- read_csv("data/aspatial/gps.csv")
+
+glimpse(gps)
+
+```
+
+
+```{r}
+
+gps$Timestamp <- date_time_parse(gps$Timestamp,
+                                 zone = "",
+                                 format = "%m/%d/%Y %H:%M:%S")
+
+gps$id <- as_factor(gps$id)
+
+gps1 <- gps %>%
+  filter(Timestamp < "2014-01-06 23:59:00")
+
+```
+
+
+
+```{r}
+
+gps_sf <- st_as_sf(gps1,
+                   coords = c("long", "lat"),
+                   crs = 4326)
+
+
+
+```
+
+
+```{r}
+
+gps_path <- gps_sf %>% 
+  group_by(id) %>% 
+  summarize(m = mean(Timestamp),
+            do_union = FALSE) %>% 
+  st_cast("LINESTRING")
+
+```
+
+
+
+```{r}
+gps_path_selected <- gps_path %>% 
+  filter(id == 1)
+tmap_mode("view")
+
+```
+
+```{r}
+tm_shape(bgmap) +
+  tm_rgb(bgmap, r=1, g=2, b=3,
+         alpha = NA,
+         saturation = 1,
+         interpolate = TRUE,
+         max.value = 255) + 
+  tm_shape(gps_path_selected) +
+  tm_lines()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

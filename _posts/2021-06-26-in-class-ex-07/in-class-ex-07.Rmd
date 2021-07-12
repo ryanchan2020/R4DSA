@@ -1,0 +1,296 @@
+---
+title: "In Class Ex 07"
+description: |
+  Introduction to Tidyverse.
+author:
+  - name: Ryan Chan
+    url: https://www.linkedin.com/in/ryan-chan-a7021b5/
+date: 06-26-2021
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, error = FALSE)
+```
+
+Install the required packages using the code chunk below.
+
+```{r}
+packages = c('DT','ggiraph','plotly','tidyverse','ggplot2')
+
+for(p in packages){
+if(!require(p, character.only = T)){
+  install.packages(p)
+  }
+  library(p, character.only = T)
+}
+```
+
+Import data
+
+```{r}
+
+exam_data <- read_csv("data/Exam_data.csv")
+
+```
+
+The code chunk below prepares a bar chart
+
+```{r}
+
+ggplot(data = exam_data,
+       aes(x=RACE)) +
+  geom_bar()
+
+```
+
+```{r}
+
+ggplot(data = exam_data,
+       aes(x=MATHS)) +
+  geom_dotplot(dotsize = 0.5)
+
+```
+
+```{r}
+
+ggplot(data = exam_data,
+       aes(x=MATHS)) +
+  geom_dotplot(dotsize = 0.5, binwidth = 2.5) +
+  scale_y_continuous(NULL, breaks = NULL)
+
+```
+
+
+```{r}
+
+ggplot(data = exam_data,
+       aes(x=MATHS, fill = RACE)) +
+  geom_dotplot(dotsize = 0.5, binwidth = 2.5) +
+  scale_y_continuous(NULL, breaks = NULL)
+
+```
+
+```{r}
+
+ggplot(data = exam_data,
+       aes(x=MATHS)) +
+  geom_histogram(bins = 20, color="black", fill="light blue")
+
+```
+
+
+```{r}
+
+ggplot(data = exam_data,
+       aes(x=MATHS, fill=GENDER)) +
+  geom_histogram(bins = 20, color="grey30")
+
+```
+
+```{r}
+ggplot(data = exam_data,
+       aes(y=MATHS,x=GENDER))+
+  geom_boxplot()+
+  geom_point(position="jitter",
+             size=0.5)
+
+
+```
+
+```{r}
+p <- ggplot(data = exam_data,
+       aes(x=MATHS))+
+  geom_dotplot_interactive(
+    aes(tooltip = ID),
+    stackgroups = TRUE,
+    binwidth = 1,
+    method = "histodot") +
+  scale_y_continuous(NULL, breaks = NULL)
+
+girafe(
+  ggobj = p,
+  width_svg = 6,
+  height_svg = 6*0.618
+)
+
+```
+
+
+
+```{r}
+p <- ggplot(data = exam_data,
+       aes(x=MATHS))+
+  geom_dotplot_interactive(
+    aes(data_id = CLASS),
+    stackgroups = TRUE,
+    binwidth = 1,
+    method = "histodot") +
+  scale_y_continuous(NULL, breaks = NULL)
+
+girafe(
+  ggobj = p,
+  width_svg = 6,
+  height_svg = 6*0.618
+)
+
+```
+
+
+
+```{r}
+p <- ggplot(data = exam_data,
+       aes(x=MATHS))+
+  geom_dotplot_interactive(
+    aes(data_id = CLASS, tooltip = CLASS),
+    stackgroups = TRUE,
+    binwidth = 1,
+    method = "histodot") +
+  scale_y_continuous(NULL, breaks = NULL)
+
+girafe(
+  ggobj = p,
+  width_svg = 6,
+  height_svg = 6*0.618
+)
+
+```
+
+
+```{r}
+
+pal <- c("red", "blue", "green")
+
+plot_ly(data = exam_data,
+        x = ~MATHS,
+        y = ~ENGLISH,
+        text = ~paste("Student ID:", ID,
+                      "<br>Class:", CLASS),
+        color = ~RACE,
+        colors = pal)
+
+```
+
+```{r}
+
+plot_ly(data = exam_data,
+        x = ~MATHS,
+        y = ~ENGLISH,
+        text = ~paste("Student ID:", ID,
+                      "<br>Class:", CLASS),
+        color = ~RACE,
+        colors = "Set1")
+
+```
+
+```{r}
+
+plot_ly(data = exam_data,
+        x = ~MATHS,
+        y = ~ENGLISH,
+        text = ~paste("Student ID:", ID,
+                      "<br>Class:", CLASS),
+        color = ~RACE) %>%
+  layout(title = 'English Score versus Maths Score',
+         xaxis = list(range = c(0,100)),
+         yaxis = list(range = c(0,100)))
+
+```
+
+```{r}
+
+p <- ggplot(data=exam_data,
+            aes(x = MATHS,
+                y = ENGLISH)) +
+  geom_point(dotsize = 1)+
+               coord_cartesian(xlim=c(0,100),
+                               ylim=c(0,100))
+
+ggplotly(p)
+
+```
+
+```{r}
+
+p1 <- ggplot(data=exam_data,
+            aes(x = MATHS,
+                y = ENGLISH)) +
+  geom_point(dotsize = 1)+
+               coord_cartesian(xlim=c(0,100),
+                               ylim=c(0,100))
+
+p2 <- ggplot(data=exam_data,
+            aes(x = MATHS,
+                y = SCIENCE)) +
+  geom_point(dotsize = 1)+
+               coord_cartesian(xlim=c(0,100),
+                               ylim=c(0,100))
+
+subplot(ggplotly(p1),
+        ggplotly(p2))
+
+```
+
+
+```{r}
+
+d <- highlight_key(exam_data)
+
+p1 <- ggplot(data=d,
+            aes(x = MATHS,
+                y = ENGLISH)) +
+  geom_point(dotsize = 1)+
+               coord_cartesian(xlim=c(0,100),
+                               ylim=c(0,100))
+
+p2 <- ggplot(data=d,
+            aes(x = MATHS,
+                y = SCIENCE)) +
+  geom_point(dotsize = 1)+
+               coord_cartesian(xlim=c(0,100),
+                               ylim=c(0,100))
+
+subplot(ggplotly(p1),
+        ggplotly(p2))
+
+```
+
+
+```{r}
+
+DT::datatable(exam_data)
+
+```
+
+
+```{r}
+
+d <- highlight_key(exam_data)
+
+p <- ggplot(d,
+            aes(ENGLISH,
+                MATHS)) +
+  geom_point(size = 1) +
+  coord_cartesian(xlim = c(0,100),
+                  ylim = c(0,100))
+
+gg <- highlight(ggplotly(p),
+                "plotly_selected")
+
+crosstalk::bscols(gg,
+                  DT::datatable(d),
+                  widths = 5)
+
+```
+
+
+
+
+
+
+
+
+

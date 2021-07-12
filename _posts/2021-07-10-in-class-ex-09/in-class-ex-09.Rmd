@@ -1,0 +1,372 @@
+---
+title: "In-Class-Ex-09"
+description: |
+  Network Visualization with R
+author:
+  - name: Ryan Chan
+    url: https://www.linkedin.com/in/ryan-chan-a7021b5/
+date: 07-10-2021
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, error = FALSE, warning = FALSE, fig.retina = 3)
+```
+
+```{r, eval=TRUE}
+
+packages = c('igraph','tidygraph','ggraph','visNetwork','clock','tidyverse','lubridate')
+
+for(p in packages){
+if(!require(p, character.only = T)){
+  install.packages(p)
+  }
+  library(p, character.only = T)
+}
+
+```
+
+
+```{r}
+
+GAStech_nodes <- read_csv("data/GAStech_email_node.csv")
+GAStech_edges <- read_csv("data/GAStech_email_edge-v2.csv")
+glimpse(GAStech_edges)
+
+```
+
+```{r}
+
+GAStech_edges$SentDate = dmy(GAStech_edges$SentDate)
+GAStech_edges$Weekday = wday(GAStech_edges$SentDate, label = TRUE, abbr = FALSE)
+
+```
+
+
+```{r}
+
+GAStech_edges_aggregated <- GAStech_edges %>%
+  filter(MainSubject == "Work related") %>%
+  group_by(source,target,Weekday) %>%
+    summarise(Weight = n()) %>%
+  filter(source!=target) %>%
+  filter(Weight>1) %>%
+  ungroup()
+
+glimpse(GAStech_edges_aggregated)
+
+```
+
+
+```{r}
+
+GAStech_graph <- tbl_graph(nodes = GAStech_nodes,
+                           edges = GAStech_edges_aggregated,
+                           directed = TRUE)
+
+GAStech_graph
+
+```
+
+
+```{r}
+
+ggraph(GAStech_graph) +
+  geom_edge_link() +
+  geom_node_point()
+
+```
+Removing cartesian coordinates (the grey area)
+```{r}
+
+g <- ggraph(GAStech_graph, layout = 'fr') +
+  geom_edge_link(aes(colour = 'grey50')) +
+  geom_node_point(aes(colour = 'grey40'))
+
+g + theme_graph(background = "grey10", text_colour = "white")
+
+```
+
+
+```{r}
+
+g <- ggraph(GAStech_graph, layout = 'nicely') +
+  geom_edge_link(aes()) +
+  geom_node_point(aes(colour = Department, size = 3))
+
+g + theme_graph()
+
+```
+
+```{r}
+
+g <- ggraph(GAStech_graph, layout = 'nicely') +
+  geom_edge_link(aes(width = Weight, alpha = 0.2)) +
+  scale_edge_width(range = c(0.1,5)) +
+  geom_node_point(aes(colour = Department, size = 3))
+
+g + theme_graph()
+
+```
+
+```{r}
+
+set_graph_style()
+
+g <- ggraph(GAStech_graph, layout = 'nicely') +
+  geom_edge_link(aes(width = Weight), alpha = 0.2) +
+  scale_edge_width(range = c(0.1,5)) +
+  geom_node_point(aes(colour = Department), size = 2) 
+
+g + facet_edges(~Weekday) +
+  theme(legend.position = 'right') +
+  th_foreground(foreground = 'grey80', border = TRUE)
+
+```
+
+```{r}
+
+set_graph_style()
+
+g <- ggraph(GAStech_graph, layout = 'nicely') +
+  geom_edge_link(aes(width = Weight), alpha = 0.2) +
+  scale_edge_width(range = c(0.1,5)) +
+  geom_node_point(aes(colour = Department), size = 2) 
+
+g + facet_nodes(~Department) +
+  theme(legend.position = 'right') +
+  th_foreground(foreground = 'grey80', border = TRUE)
+
+```
+
+```{r}
+
+g <- GAStech_graph %>%
+  mutate(betweenness_centrality = centrality_betweenness()) %>%
+  ggraph(layout = 'fr') +
+  geom_edge_link(aes(width = Weight), alpha = 0.2) +
+  scale_edge_width(range = c(0.1,5)) +
+  geom_node_point(aes(colour = Department, size = betweenness_centrality))
+
+g + theme_graph() +
+  theme(legend.key.size = unit(0.4,'cm'))
+
+
+```
+
+```{r}
+
+g <- GAStech_graph %>%
+  ggraph(layout = 'fr') +
+  geom_edge_link(aes(width = Weight), alpha = 0.2) +
+  scale_edge_width(range = c(0.1,5)) +
+  geom_node_point(aes(colour = Department, size = centrality_betweenness()))
+
+g + theme_graph() +
+  theme(legend.key.size = unit(0.4,'cm'))
+
+
+```
+
+
+
+
+
+```{r}
+
+g <- GAStech_graph %>%
+  mutate(community = as.factor(group_edge_betweenness(weights = Weight, directed = TRUE))) %>%
+  ggraph(layout = 'fr') +
+  geom_edge_link(aes(width = Weight), alpha = 0.2) +
+  scale_edge_width(range = c(0.1,5)) +
+  geom_node_point(aes(colour = community))
+
+g + theme_graph() +
+  theme(legend.key.size = unit(0.4,'cm'))
+
+
+```
+
+```{r}
+
+GAStech_edges_aggregated <- GAStech_edges %>%
+  left_join(GAStech_nodes, by = c('sourceLabel' = 'label')) %>%
+  rename(from = id) %>%
+  left_join(GAStech_nodes, by = c('targetLabel' = 'label')) %>%
+  rename(to = id) %>%
+  filter(MainSubject == 'Work related') %>%
+  group_by(from, to) %>%
+    summarise(weight = n()) %>%
+  filter(from!=to) %>%
+  filter(weight > 1) %>%
+  ungroup()
+
+GAStech_edges_aggregated
+
+```
+
+
+```{r}
+
+visNetwork(GAStech_nodes, GAStech_edges_aggregated) %>%
+  visIgraphLayout(layout = "layout_with_fr")
+
+```
+
+```{r}
+
+visNetwork(GAStech_nodes, GAStech_edges_aggregated) %>%
+  visIgraphLayout(layout = "layout_with_kk")
+
+```
+
+
+```{r}
+
+GAStech_nodes <- GAStech_nodes %>%
+  rename(group=Department)
+
+```
+
+
+
+```{r}
+
+visNetwork(GAStech_nodes, GAStech_edges_aggregated) %>%
+  visIgraphLayout(layout = 'layout_with_fr') %>%
+  visLegend() %>%
+  visLayout(randomSeed = 123)
+
+```
+
+
+
+```{r}
+
+visNetwork(GAStech_nodes, GAStech_edges_aggregated) %>%
+  visIgraphLayout(layout = 'layout_with_fr') %>%
+  visOptions(highlightNearest = TRUE,
+             nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visLayout(randomSeed = 123)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

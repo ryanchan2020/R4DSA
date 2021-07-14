@@ -11,9 +11,9 @@
     ],
     "date": "2021-07-12",
     "categories": [],
-    "contents": "\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n",
+    "contents": "\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nRows: 4,063\r\nColumns: 8\r\n$ source                 <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1~\r\n$ type                   <chr> \"mbdata\", \"mbdata\", \"mbdata\", \"mbdata~\r\n$ `date(yyyyMMddHHmmss)` <dbl> 2.014012e+13, 2.014012e+13, 2.014012e~\r\n$ author                 <chr> \"POK\", \"maha_Homeland\", \"Viktor-E\", \"~\r\n$ message                <chr> \"Follow us @POK-Kronos\", \"Don't miss ~\r\n$ latitude               <dbl> NA, NA, NA, NA, NA, NA, NA, NA, NA, N~\r\n$ longitude              <dbl> NA, NA, NA, NA, NA, NA, NA, NA, NA, N~\r\n$ location               <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, \"~\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n",
     "preview": {},
-    "last_modified": "2021-07-12T17:48:14+08:00",
+    "last_modified": "2021-07-15T00:38:21+08:00",
     "input_file": "vast-challenge-mini-challenge-3.utf8.md"
   },
   {

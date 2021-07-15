@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, error = FALSE, warning = FA
 ```{r}
 
 packages = c('igraph','tidygraph','ggraph','hms','textplot','tidyverse','lubridate','ggwordcloud','DT','wordcloud',
-             'widyr','tidytext','dplyr','clock','visNetwork','hms')
+             'widyr','tidytext','dplyr','clock','visNetwork','hms','qdapDictionaries', 'corpus','syuzhet')
 
 for(p in packages){
 if(!require(p, character.only = T)){
@@ -43,12 +43,6 @@ raw_data <- data.table::rbindlist(mctext_files, use.names = TRUE, idcol = "sourc
 
 write_rds(raw_data, "data/rds/raw_data.rds")
 
-```
-
-
-
-```{r}
-
 glimpse(raw_data)
 
 ```
@@ -61,7 +55,19 @@ glimpse(raw_data)
 raw_data$timestamp <- paste(substring(raw_data$`date(yyyyMMddHHmmss)`,first = 9, last = 10),
                            substring(raw_data$`date(yyyyMMddHHmmss)`,first = 11, last = 12),sep=":")
 
+raw_data$date <- paste(substring(raw_data$`date(yyyyMMddHHmmss)`, first = 1, last = 4),
+                       substring(raw_data$`date(yyyyMMddHHmmss)`, first = 5, last = 6),
+                       substring(raw_data$`date(yyyyMMddHHmmss)`, first = 7, last = 8),sep = "-")
+
+raw_data$date <- parse_date(raw_data$date, format = "%Y-%m-%d")
+
 raw_data$timestamp <- parse_time(raw_data$timestamp, format = "%AT")
+
+raw_data$datetime <- paste(raw_data$date, raw_data$timestamp, sep = " ")
+raw_data$datetime <- parse_date_time(raw_data$datetime, "%Y-%m-%d %H:%M:%S")
+raw_data$time_block = cut(raw_data$datetime, breaks = "15 min")
+
+glimpse(raw_data)
 
 ```
 
@@ -70,13 +76,13 @@ raw_data$timestamp <- parse_time(raw_data$timestamp, format = "%AT")
 ```{r}
 
 raw_data$hashtags <- str_extract_all(raw_data$message,"(?<=#)\\w+\\b")
-raw_data$hashtags[length(raw_data$hashtags) == 0] <- ""
+raw_data$hashtags[lengths(raw_data$hashtags) == 0] <- NA_character_
 raw_data$retweet_source <- str_extract_all(raw_data$message,"(?<=RT @)\\S+\\b")
-raw_data$retweet_source[length(raw_data$retweet_source) == 0] <- ""
+raw_data$retweet_source[lengths(raw_data$retweet_source) == 0] <- NA_character_
 raw_data$cleaned_message <- str_replace_all(raw_data$message,"RT @\\S+\\s*\\b","")
 raw_data$cleaned_message <- str_replace_all(raw_data$cleaned_message,"#\\w+\\s*\\b","")
 raw_data$mentions <- if (str_extract_all(raw_data$cleaned_message,"(?<=@)\\S+\\b") %in% raw_data$author) {str_extract_all(raw_data$cleaned_message,"(?<=@)\\S+\\b")} else if (str_extract_all(raw_data$cleaned_message,"(?<=@)\\w+\\b") %in% raw_data$author) {str_extract_all(raw_data$cleaned_message,"(?<=@)\\w+\\b")}
-raw_data$mentions[length(raw_data$mentions) == 0] <- NA_character_
+raw_data$mentions[lengths(raw_data$mentions) == 0] <- NA_character_
 raw_data$cleaned_message <- str_replace_all(raw_data$cleaned_message,"@\\S+\\s*\\b","")
 
 ```
@@ -85,15 +91,11 @@ raw_data$cleaned_message <- str_replace_all(raw_data$cleaned_message,"@\\S+\\s*\
 
 ```{r}
 
-
-
-```
-
-
-
-```{r}
-
-
+mb_words <- raw_data %>%
+  filter(type == "mbdata") %>% 
+  unnest_tokens(word, cleaned_message, drop = FALSE) %>%
+  filter(str_detect(word, "[a-z']$"),
+         !word %in% stop_words$word)
 
 ```
 
@@ -101,7 +103,7 @@ raw_data$cleaned_message <- str_replace_all(raw_data$cleaned_message,"@\\S+\\s*\
 
 ```{r}
 
-
+mb_words <- select(mb_words, -c(source, type, `date(yyyyMMddHHmmss)`, date, timestamp, message))
 
 ```
 
@@ -109,7 +111,18 @@ raw_data$cleaned_message <- str_replace_all(raw_data$cleaned_message,"@\\S+\\s*\
 
 ```{r}
 
+mb_words_by_author <- mb_words %>%
+count(author, word, sort = TRUE) %>%
+ungroup()
 
+```
+
+
+
+```{r}
+
+mb_words_by_author$in_dictionary <- if_else (mb_words_by_author$word %in% GradyAugmented,0,1)
+mb_words_by_author$sentiment <- get_sentiment(mb_words_by_author$word, method = "syuzhet")
 
 ```
 

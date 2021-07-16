@@ -97,17 +97,58 @@ mb_words <- raw_data %>%
   filter(str_detect(word, "[a-z']$"),
          !word %in% stop_words$word)
 
+mb_words <- select(mb_words, -c(source, type, `date(yyyyMMddHHmmss)`, date, timestamp, message))
+
+```
+
+#############################################
+Messages by Author
+#############################################
+
+```{r}
+
+mb_messages_by_author <- raw_data %>% 
+  filter(type == "mbdata") %>% 
+  count(author, cleaned_message)
+
 ```
 
 
 
 ```{r}
 
-mb_words <- select(mb_words, -c(source, type, `date(yyyyMMddHHmmss)`, date, timestamp, message))
+mb_messages_by_author_aggregated <- mb_messages_by_author %>% 
+  group_by(author) %>% 
+  summarize(unique_count = n(), total_count = sum(n), junk_check = total_count/unique_count)
 
 ```
 
 
+#############################################
+Words by Timeblock
+#############################################
+
+
+```{r}
+
+mb_words_by_timeblock <- mb_words %>% 
+  count(time_block, word, sort=TRUE)
+
+```
+
+
+
+```{r}
+
+mb_words_by_timeblock_tfidf <- mb_words_by_timeblock %>% 
+  bind_tf_idf(word, time_block, n) %>%
+  arrange(desc(tf_idf))
+
+```
+
+#############################################
+Words by Author
+#############################################
 
 ```{r}
 
@@ -123,6 +164,101 @@ ungroup()
 
 mb_words_by_author$in_dictionary <- if_else (mb_words_by_author$word %in% GradyAugmented,0,1)
 mb_words_by_author$sentiment <- get_sentiment(mb_words_by_author$word, method = "syuzhet")
+mb_words_by_author$total_in_dictionary <- mb_words_by_author$in_dictionary*mb_words_by_author$n
+mb_words_by_author$total_sentiment <- mb_words_by_author$sentiment*mb_words_by_author$n
+
+```
+
+
+
+```{r}
+
+mb_words_by_author_tfidf <- mb_words_by_author %>% 
+  bind_tf_idf(word, author, n) %>%
+  arrange(desc(tf_idf))
+
+```
+
+
+
+```{r}
+
+mb_words_by_author_nested <- mb_words_by_author %>% 
+  group_by(author) %>% 
+  group_nest()
+
+```
+
+
+
+```{r}
+
+set.seed(1234)
+wordcloud(mb_words_by_author$word, mb_words_by_author$n, max.words = 300)
+
+```
+
+
+
+```{r}
+
+mb_words_by_author_agg_sentiment <- mb_words_by_author %>% 
+  group_by(author) %>% 
+  summarise(grandtotal_sentiment = sum(total_sentiment)) %>% 
+  arrange(desc(grandtotal_sentiment))
+
+```
+
+
+
+
+```{r}
+
+mb_words_by_author_NotInDict <- mb_words_by_author %>%
+  filter(total_in_dictionary > 0) %>% 
+  group_by(author) %>% 
+  summarise(sum(total_in_dictionary), data = list(word))
+
+```
+
+
+
+```{r}
+
+
+
+```
+
+
+
+
+```{r}
+
+
+
+```
+
+
+
+```{r}
+
+
+
+```
+
+
+
+```{r}
+
+
+
+```
+
+
+
+```{r}
+
+
 
 ```
 
@@ -160,16 +296,6 @@ mb_words_by_author$sentiment <- get_sentiment(mb_words_by_author$word, method = 
 
 
 
-
-```{r}
-
-
-
-```
-
-
-
-
 ```{r}
 
 
@@ -183,7 +309,6 @@ mb_words_by_author$sentiment <- get_sentiment(mb_words_by_author$word, method = 
 
 
 ```
-
 
 
 
@@ -201,6 +326,125 @@ mb_words_by_author$sentiment <- get_sentiment(mb_words_by_author$word, method = 
 
 ```
 
+
+
+```{r}
+
+
+
+```
+
+
+
+```{r}
+
+
+
+```
+
+
+
+```{r}
+
+
+
+```
+
+
+
+```{r}
+
+
+
+```
+
+
+
+```{r}
+
+
+
+```
+
+
+
+```{r}
+
+
+
+```
+
+
+
+```{r}
+
+
+
+```
+
+
+
+```{r}
+
+
+
+```
+
+
+
+```{r}
+
+
+
+```
+
+
+
+```{r}
+
+
+
+```
+
+
+
+```{r}
+
+
+
+```
+
+
+
+```{r}
+
+
+
+```
+
+
+
+```{r}
+
+
+
+```
+
+
+
+```{r}
+
+
+
+```
+
+
+
+```{r}
+
+
+
+```
 
 
 

@@ -17,10 +17,14 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, error = FALSE, warning = FA
 ```
 
 
+# 1. Introduction and Objectives
+
+
 ```{r}
 
 packages = c('igraph','tidygraph','ggraph','hms','textplot','tidyverse','lubridate','ggwordcloud','DT','wordcloud',
-             'widyr','tidytext','dplyr','clock','visNetwork','hms','qdapDictionaries', 'corpus','syuzhet')
+             'widyr','tidytext','dplyr','clock','visNetwork','hms','qdapDictionaries',
+             'corpus','syuzhet','greekLetters','textdata','plotly','patchwork')
 
 for(p in packages){
 if(!require(p, character.only = T)){
@@ -119,7 +123,18 @@ mb_messages_by_author <- raw_data %>%
 
 mb_messages_by_author_aggregated <- mb_messages_by_author %>% 
   group_by(author) %>% 
-  summarize(unique_count = n(), total_count = sum(n), junk_check = total_count/unique_count)
+  summarize(unique_count = n(), total_count = sum(n), junk_check = total_count/unique_count) %>% 
+  filter(junk_check > 1)
+
+
+
+```
+
+
+
+```{r}
+
+ggplot(mb_messages_by_author_aggregated, aes())
 
 ```
 
@@ -164,8 +179,10 @@ ungroup()
 
 mb_words_by_author$in_dictionary <- if_else (mb_words_by_author$word %in% GradyAugmented,0,1)
 mb_words_by_author$sentiment <- get_sentiment(mb_words_by_author$word, method = "syuzhet")
-mb_words_by_author$total_in_dictionary <- mb_words_by_author$in_dictionary*mb_words_by_author$n
 mb_words_by_author$total_sentiment <- mb_words_by_author$sentiment*mb_words_by_author$n
+
+nrc <- get_sentiments("nrc")
+
 
 ```
 
@@ -215,9 +232,9 @@ mb_words_by_author_agg_sentiment <- mb_words_by_author %>%
 ```{r}
 
 mb_words_by_author_NotInDict <- mb_words_by_author %>%
-  filter(total_in_dictionary > 0) %>% 
+  filter(in_dictionary > 0) %>% 
   group_by(author) %>% 
-  summarise(sum(total_in_dictionary), data = list(word))
+  summarise(sum(in_dictionary), data = list(word))
 
 ```
 
@@ -225,7 +242,7 @@ mb_words_by_author_NotInDict <- mb_words_by_author %>%
 
 ```{r}
 
-
+datatable(mb_words_by_author_NotInDict)
 
 ```
 
@@ -234,15 +251,10 @@ mb_words_by_author_NotInDict <- mb_words_by_author %>%
 
 ```{r}
 
-
-
-```
-
-
-
-```{r}
-
-
+RT_edges <- raw_data %>% 
+  filter(type == 'mbdata') %>% 
+  filter(!is.na(retweet_source)) %>% 
+  transmute(source_label = author, target_label = as.character(retweet_source))
 
 ```
 
@@ -250,15 +262,9 @@ mb_words_by_author_NotInDict <- mb_words_by_author %>%
 
 ```{r}
 
-
-
-```
-
-
-
-```{r}
-
-
+RT_edges_agg <- RT_edges %>% 
+  count(source_label, target_label) %>% 
+  ungroup
 
 ```
 
@@ -266,7 +272,11 @@ mb_words_by_author_NotInDict <- mb_words_by_author %>%
 
 ```{r}
 
-
+RT_source <- distinct(RT_edges, node = RT_edges$source_label)
+RT_target <- distinct(RT_edges, node = as.character(RT_edges$target_label))
+RT_node <- bind_rows(RT_source, RT_target)
+RT_node <- RT_node %>% 
+  distinct(node)
 
 ```
 
@@ -274,7 +284,31 @@ mb_words_by_author_NotInDict <- mb_words_by_author %>%
 
 ```{r}
 
+RT_graph <- tbl_graph(nodes = RT_node, edges = RT_edges_agg, directed = TRUE)
+RT_graph
 
+```
+
+
+
+```{r}
+
+RT_network <- RT_graph %>% 
+  mutate(degree_centrality = centrality_degree()) %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(width=n),
+  alpha=0.2) +
+  scale_edge_width(range = c(0.1, 5)) +
+  geom_node_point(aes(colour = node,
+  size=degree_centrality))
+
+RT_network + theme_graph()
+
+```
+
+
+
+```{r}
 
 ```
 

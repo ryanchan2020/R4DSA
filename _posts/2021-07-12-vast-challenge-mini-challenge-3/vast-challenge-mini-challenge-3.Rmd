@@ -2,6 +2,7 @@
 title: "VAST Challenge - Mini-Challenge 3"
 description: |
   Mini-Challenge 3
+draft: true
 author:
   - name: Ryan Chan
     url: https://www.linkedin.com/in/ryan-chan-a7021b5/

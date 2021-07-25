@@ -2,7 +2,7 @@
 title: "VAST Challenge - Mini-Challenge 3"
 description: |
   Mini-Challenge 3
-draft: true
+draft: false
 author:
   - name: Ryan Chan
     url: https://www.linkedin.com/in/ryan-chan-a7021b5/
@@ -155,7 +155,7 @@ Before we begin it is essential to load the packages we need.
 ```{r echo = TRUE}
 
 packages = c('igraph','tidygraph','ggraph','hms','textplot','tidyverse','lubridate','ggwordcloud','DT','wordcloud',
-             'widyr','tidytext','dplyr','clock','visNetwork','hms','qdapDictionaries',
+             'widyr','tidytext','dplyr','clock','visNetwork','hms','qdapDictionaries', 'textmineR','topicmodels',
              'corpus','syuzhet','textdata','plotly','patchwork','Rcpp','greekLetters')
 
 for(p in packages){
@@ -352,7 +352,7 @@ It seems the period between 6.30pm to 8pm had a surge in more serious cases (>10
 
 We will build an index to calculate the spam proportion for each author. For the spam index score we will use the total number of messages for each author divided by the number of unique messages for each author. Authors with scores >1 means that they have repeated a tweet content at least once. To focus on authors who likely spam repeat tweets, we will display the list of authors with spam score >1.1
 
-```{r}
+```{r echo=TRUE}
 
 mb_messages_by_author <- mb %>% 
   count(author, cleaned_message)
@@ -536,13 +536,13 @@ mb_words2_by_author_agg_sentiment <- mb_words2_by_author %>%
 ```
 
 
-# 5. Objective 2 - Identify Events and Risk Level
+# 5. Objective 2 and 3 - Identify Events / Risk Level and decide where to send first responders
 
 ## Hashtags Analysis
 
 Let us investigate the hashtags that users are sending throughout the evening, and see if we are able to determine anything useful.
 
-```{r}
+```{r echo=TRUE}
 
 mb_hashtags <- mb_cleaned2 %>%
   filter(!(is.na(hashtags))) %>% 
@@ -592,7 +592,7 @@ The second hashtag cloud seems to provide a little more useful information.
 
 Let us create a wordcloud using the term frequency as the size factor, faceted by time block.
 
-```{r}
+```{r echo=TRUE}
 
 mb_words_by_timeblock <- mb_words2 %>% 
   count(time_block, word, sort=TRUE)
@@ -608,20 +608,22 @@ ggplot(mb_words_by_timeblock, aes(label = word, size = n)) +
 
 The resulting wordcloud supports the insights from the hashtag cloud and gives us an even clearer indication of the happenings throughout the night: 
 
-1. From the wordcloud above it seems that a fire broke out first between 6.30-7pm. 
+1. The POK Rally was likely held at the park, and was the main focus of people's attention, between 5-6.30pm
 
-2. A short period of time later at around 7.30pm, we see that a separate incident involving a hostage standoff with the police occurred. There were likely shots fired during this altercation with SWAT team being dispatched during the 8-8.30pm window. It seems that the situation was defused with the arrest of the suspects and release of hostages between 9-9.30pm.
+2. From the wordcloud above it seems that a fire broke out first between 6.30-7pm. 
 
-3. Another incident involving possibly a loud explosion happens during the 9.30-10pm window.
+3. A short period of time later at around 7.30pm, we see that a separate incident involving a hostage standoff with the police occurred. There were likely shots fired during this altercation with SWAT team being dispatched during the 8-8.30pm window. It seems that the situation was defused with the arrest of the suspects and release of hostages between 9-9.30pm.
 
-4. Between 7.30-9.30pm we also see constant mention of a van, although we are still unsure of its significance at the moment.
+4. Another incident involving possibly a loud explosion happens during the 9.30-10pm window.
+
+5. Between 7.30-9.30pm we also see constant mention of a van, although we are still unsure of its significance at the moment.
 
 
 ### TF-IDF Across Time
 
 Let us take a look at a bi-gram TF-IDF across the different time periods of the night. 
 
-```{r}
+```{r echo=TRUE}
 
 bigrams <- mb_cleaned2 %>%
   unnest_tokens(word, 
@@ -667,11 +669,13 @@ bigrams_tfidf %>%
 
 From the above visualization it seems we can find out more information about the events happening.
 
-1. The fire that broke out seems to be at the Dancing Dolphin apartment complex.
+1. Security for POK Rally was tight, with heavy police presence, possible to manage crowds.
 
-2. The hostage situation and standoff seems to take place at Gelato Galore.
+2. The fire that broke out seems to be at the Dancing Dolphin apartment complex.
 
-3. Between 7.30-8.30pm there are mentions of "erratic driver", "wild driving" and "driving black (van possibly)". Could this possibly relate to the earlier mention of the black van, and possibly the hostage situation and shootout?
+3. The hostage situation and standoff seems to take place at Gelato Galore.
+
+4. Between 7.30-8.30pm there are mentions of "erratic driver", "wild driving" and "driving black (van possibly)". Could this possibly relate to the earlier mention of the black van, and possibly the hostage situation and shootout?
 
 
 ```{r}
@@ -699,21 +703,69 @@ From the above visualization it seems we can find out more information about the
 
 ### Topic Modeling with LDA
 
+We will also attempt to apply topic modeling using LDA to the dataset, to see if we are able to come up with meaningful topics that correlate to events. We will first find out the tf-idf scores of each word, with each message as one document.
+
+```{r echo=TRUE}
+
+mb_words2_by_message <- mb_words2 %>% 
+  count(cleaned_message, word, sort=TRUE)
+
+mb_words2_by_message_tfidf <- mb_words2_by_message %>% 
+  bind_tf_idf(word, cleaned_message, n) %>%
+  filter(n>1) %>% 
+  arrange(desc(tf_idf))
 
 
-### Topics Across Time
+ggplot(mb_words2_by_message_tfidf, aes(y=tf_idf)) +
+  geom_boxplot() +
+  geom_hline(yintercept = 2.5, linetype = "dashed", color = "red") +
+  ggtitle("TF-IDF") +
+  xlab("")
 
+```
 
+As can be seen in the boxplot of tf-idf scores above, we will remove words with tf-idf score of 2.5 or higher, as these words most likely do not hold any insightful meaning for us. Subsequently, We will proceed to create the document term matrix required for LDA.
 
+After pre-processing the dataset and creating the Document Term Matrix, we will now proceed to fit the model, using a k of 6 topics.
 
+```{r echo=TRUE}
+
+mb_words2_by_message_tfidf_better <- mb_words2_by_message_tfidf %>% 
+  filter(tf_idf<2.5)
+
+mb_words2_by_msg_dtm <- mb_words2_by_message_tfidf_better %>% 
+  cast_dtm(cleaned_message, word, n)
+
+mb_words2_by_msg_lda <- LDA(mb_words2_by_msg_dtm, k = 6, control = list(seed = 1234))
+mb_words2_by_msg_topics <- tidy(mb_words2_by_msg_lda, matrix = "beta")
+mb_words2_by_msg_top_terms <- mb_words2_by_msg_topics %>%
+  group_by(topic) %>%
+  slice_max(beta, n = 10) %>% 
+  ungroup() %>%
+  arrange(topic, -beta)
+
+mb_words2_by_msg_top_terms %>%
+  mutate(term = reorder_within(term, beta, topic)) %>%
+  ggplot(aes(beta, term, fill = factor(topic))) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ topic, scales = "free") +
+  scale_y_reordered()  
+
+```
+
+Based on the results of the topic modeling exercise above and referencing from what we already know so far, we can roughly see how each topic has a slight leaning towards a particular event:
+
+* Topics 2 and 3 seem to relate more to the POK Rally event
+* Topics 4 and 6 seem to relate more to the fire outbreak at Dancing Dolphin
+* Topics 1 and 3 seem to relate more to the hostage situation and shootout/standoff
 
 ## Author Analysis
 
 ### Retweet Network
 
+Many times, users who tweet reliable and and very fast information (i.e. always dishing out the latest breaking news) tend to get retweeted a lot. We will perform a network analysis on the retweet relationship between users, and try to find out who the reliable authors in our information space are.
 
-
-```{r}
+```{r echo=TRUE}
 
 RT_edges <- mb %>% 
   filter(!is.na(retweet_source)) %>% 
@@ -721,7 +773,7 @@ RT_edges <- mb %>%
 
 RT_edges_agg <- RT_edges %>% 
   count(source_label, target_label) %>%
-  rename(from = source_label, to = target_label)
+  rename(from = source_label, to = target_label) %>% 
   ungroup
 
 RT_source <- distinct(RT_edges, node = RT_edges$source_label)
@@ -730,7 +782,7 @@ RT_node <- bind_rows(RT_source, RT_target)
 RT_node <- RT_node %>% 
   distinct(node) %>% 
   rename(id = node)
-RT_vis_node <- data.frame(id=RT_node$id, label= paste(RT_node$id), font.size=30)  
+RT_vis_node <- data.frame(id=RT_node$id, label= paste(RT_node$id), font.size=30)
 
 visNetwork(RT_vis_node,RT_edges_agg, idToLabel=TRUE) %>%
 visNodes(color = list(background = "lightblue", 
@@ -743,6 +795,30 @@ visOptions(highlightNearest = list(enabled = T, hover = T),
 visLayout(randomSeed = 1234)  
   
 ```
+
+From the above network results, we can roughly identify 6 distinct users who are positioned directly in he centre of the network, indicating that they are the most retweeted users and hence would most probably be a reliable source of information.
+
+Of the 6 users, the handles for 4 of them ("KronosStar", "AbilaPost", "Central Bulletin", "InternationalNews", "NewsOnlineToday") highly suggests that they belong to a news outlet, thereby enforcing the view that these users are reporters. These 6 user may hold the key to unfolding the timeline of events on the night of January 23, 2014.
+
+
+### Exploring the tweets of important authors
+
+We will explore the tweets of the above-mentioned users to try and determine a more accurate timeline of the events of the night.
+
+```{r}
+
+RT_msg_DT <- mb_cleaned2 %>% 
+  filter(author %in% c("megaMan", "KronosStar", "AbilaPost", "Central Bulletin", "InternationalNews", "NewsOnlineToday", "HomelandIlluminations")) %>% 
+  transmute(time=timestamp, author=author, message=cleaned_message) %>% 
+  arrange(!(desc(time)))
+
+datatable(RT_msg_DT, filter = 'top')
+
+```
+
+Based on analysis of our important users' tweets, below is a history of the timeline of events that happened that night:
+
+
 
 
 ```{r}
@@ -762,41 +838,21 @@ visLayout(randomSeed = 1234)
 
 ```
 
-```{r}
-
-#set.seed(1234)
-#wordcloud(mb_words_by_author$word, mb_words_by_author$n, max.words = 300)
-
-```
-
-### Exploring the tweets of important authors
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# 6. Objective 3 - Where to send responders
-
-
-
 
 
 ```{r}
 
+cc_dt <- cc %>%
+  filter(case_type != "Others") %>% 
+  transmute(call_type=case_type, message=message, time=timestamp,location=location) %>% 
+  arrange(!(desc(time)))
 
+datatable(cc_dt)
 
 ```
 
-# 7. References
+
+# 6. References
 
 
 ```{r}

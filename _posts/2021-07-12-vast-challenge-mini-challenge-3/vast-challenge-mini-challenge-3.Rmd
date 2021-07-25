@@ -24,7 +24,7 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, error = FALSE, warning = FA
 
 packages = c('igraph','tidygraph','ggraph','hms','textplot','tidyverse','lubridate','ggwordcloud','DT','wordcloud',
              'widyr','tidytext','dplyr','clock','visNetwork','hms','qdapDictionaries',
-             'corpus','syuzhet','greekLetters','textdata','plotly','patchwork')
+             'corpus','syuzhet','greekLetters','textdata','plotly','patchwork','Rcpp')
 
 for(p in packages){
 if(!require(p, character.only = T)){
@@ -33,6 +33,7 @@ if(!require(p, character.only = T)){
   library(p, character.only = T)
 }
 
+`%!in%` = Negate(`%in%`)
 
 ```
 
@@ -69,7 +70,7 @@ raw_data$timestamp <- parse_time(raw_data$timestamp, format = "%AT")
 
 raw_data$datetime <- paste(raw_data$date, raw_data$timestamp, sep = " ")
 raw_data$datetime <- parse_date_time(raw_data$datetime, "%Y-%m-%d %H:%M:%S")
-raw_data$time_block = cut(raw_data$datetime, breaks = "15 min")
+raw_data$time_block = cut(raw_data$datetime, breaks = "30 min")
 
 glimpse(raw_data)
 
@@ -79,13 +80,21 @@ glimpse(raw_data)
 
 ```{r}
 
+#author_unique_list <- raw_data %>% distinct(raw_data$author)
+#author_list <- as.list(author_unique_list)
+author_list <- unique(raw_data$author)
 raw_data$hashtags <- str_extract_all(raw_data$message,"(?<=#)\\w+\\b")
 raw_data$hashtags[lengths(raw_data$hashtags) == 0] <- NA_character_
+raw_data$hashtags <- as.character(raw_data$hashtags)
 raw_data$retweet_source <- str_extract_all(raw_data$message,"(?<=RT @)\\S+\\b")
 raw_data$retweet_source[lengths(raw_data$retweet_source) == 0] <- NA_character_
+raw_data$retweet_source <- as.character(raw_data$retweet_source)
 raw_data$cleaned_message <- str_replace_all(raw_data$message,"RT @\\S+\\s*\\b","")
 raw_data$cleaned_message <- str_replace_all(raw_data$cleaned_message,"#\\w+\\s*\\b","")
-raw_data$mentions <- if (str_extract_all(raw_data$cleaned_message,"(?<=@)\\S+\\b") %in% raw_data$author) {str_extract_all(raw_data$cleaned_message,"(?<=@)\\S+\\b")} else if (str_extract_all(raw_data$cleaned_message,"(?<=@)\\w+\\b") %in% raw_data$author) {str_extract_all(raw_data$cleaned_message,"(?<=@)\\w+\\b")}
+raw_data$mentions <- ifelse(as.character(str_extract_all(raw_data$cleaned_message,"(?<=@)\\S+\\b")) %in% author_list, str_extract_all(raw_data$cleaned_message,"(?<=@)\\S+\\b"),ifelse (as.character(str_extract_all(raw_data$cleaned_message,"(?<=@)\\w+\\b")) %in% author_list,str_extract_all(raw_data$cleaned_message,"(?<=@)\\w+\\b"),NA_character_))
+raw_data$mentions <- as.character(raw_data$mentions)
+raw_data <- raw_data %>% mutate(mentions = ifelse(as.character(mentions) != as.character(author),mentions,NA_character_))
+#raw_data <- raw_data %>% mutate(mentions = ifelse(as.character(mentions) %in% author_list,mentions,NA_character_))
 raw_data$mentions[lengths(raw_data$mentions) == 0] <- NA_character_
 raw_data$cleaned_message <- str_replace_all(raw_data$cleaned_message,"@\\S+\\s*\\b","")
 
@@ -93,10 +102,26 @@ raw_data$cleaned_message <- str_replace_all(raw_data$cleaned_message,"@\\S+\\s*\
 
 
 
+
 ```{r}
 
-mb_words <- raw_data %>%
-  filter(type == "mbdata") %>% 
+mb <- raw_data %>% filter(type == "mbdata")
+cc <- raw_data %>% filter(type == "ccdata")
+
+```
+
+
+```{r}
+
+
+
+```
+
+
+
+```{r}
+
+mb_words <- mb %>% 
   unnest_tokens(word, cleaned_message, drop = FALSE) %>%
   filter(str_detect(word, "[a-z']$"),
          !word %in% stop_words$word)
@@ -111,8 +136,7 @@ Messages by Author
 
 ```{r}
 
-mb_messages_by_author <- raw_data %>% 
-  filter(type == "mbdata") %>% 
+mb_messages_by_author <- mb %>% 
   count(author, cleaned_message)
 
 ```
@@ -247,12 +271,14 @@ datatable(mb_words_by_author_NotInDict)
 ```
 
 
+#############################################
+Retweet Network
+#############################################
 
 
 ```{r}
 
-RT_edges <- raw_data %>% 
-  filter(type == 'mbdata') %>% 
+RT_edges <- mb %>% 
   filter(!is.na(retweet_source)) %>% 
   transmute(source_label = author, target_label = as.character(retweet_source))
 
@@ -263,7 +289,8 @@ RT_edges <- raw_data %>%
 ```{r}
 
 RT_edges_agg <- RT_edges %>% 
-  count(source_label, target_label) %>% 
+  count(source_label, target_label) %>%
+  rename(from = source_label, to = target_label)
   ungroup
 
 ```
@@ -276,7 +303,9 @@ RT_source <- distinct(RT_edges, node = RT_edges$source_label)
 RT_target <- distinct(RT_edges, node = as.character(RT_edges$target_label))
 RT_node <- bind_rows(RT_source, RT_target)
 RT_node <- RT_node %>% 
-  distinct(node)
+  distinct(node) %>% 
+  rename(id = node)
+RT_vis_node <- data.frame(id=RT_node$id, label= paste(RT_node$id), font.size=30)
 
 ```
 
@@ -284,8 +313,8 @@ RT_node <- RT_node %>%
 
 ```{r}
 
-RT_graph <- tbl_graph(nodes = RT_node, edges = RT_edges_agg, directed = TRUE)
-RT_graph
+#RT_graph <- tbl_graph(nodes = RT_node, edges = RT_edges_agg, directed = TRUE)
+#RT_graph
 
 ```
 
@@ -293,30 +322,16 @@ RT_graph
 
 ```{r}
 
-RT_network <- RT_graph %>% 
-  mutate(degree_centrality = centrality_degree()) %>%
-  ggraph(layout = "fr") +
-  geom_edge_link(aes(width=n),
-  alpha=0.2) +
-  scale_edge_width(range = c(0.1, 5)) +
-  geom_node_point(aes(colour = node,
-  size=degree_centrality))
+#RT_network <- RT_graph %>% 
+  #mutate(degree_centrality = centrality_degree()) %>%
+  #ggraph(layout = "fr") +
+  #geom_edge_link(aes(width=n),
+  #alpha=0.2) +
+  #scale_edge_width(range = c(0.1, 5)) +
+  #geom_node_point(aes(colour = node,
+  #size=degree_centrality))
 
-RT_network + theme_graph()
-
-```
-
-
-
-```{r}
-
-```
-
-
-
-```{r}
-
-
+#RT_network + theme_graph()
 
 ```
 
@@ -332,7 +347,38 @@ RT_network + theme_graph()
 
 ```{r}
 
+visNetwork(RT_vis_node,RT_edges_agg, idToLabel=TRUE) %>%
+visNodes(color = list(background = "lightblue", 
+                        border = "darkgreen",
+                        highlight = "red"),
+         labelHighlightBold = TRUE) %>% 
+visIgraphLayout(layout = "layout_with_fr") %>% 
+visOptions(highlightNearest = list(enabled = T, hover = T), 
+           nodesIdSelection = T) %>% 
+visLayout(randomSeed = 1234)
 
+```
+
+#####################################
+Hastags
+#####################################
+
+```{r}
+
+mb_hashtags <- mb %>%
+  unnest(hashtags, keep_empty = TRUE)
+
+```
+
+#####################################
+Mentions
+#####################################
+
+```{r}
+
+mb_mentions <- mb %>%
+  filter(!is.na(mentions)) %>% 
+  unnest(mentions, keep_empty = FALSE)
 
 ```
 

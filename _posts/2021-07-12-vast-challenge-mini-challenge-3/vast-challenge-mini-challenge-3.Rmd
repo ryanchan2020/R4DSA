@@ -17,7 +17,18 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, error = FALSE, warning = FA
 ```
 
 
+> The write-up below attempts to solve Mini-Challenge 3 from the VAST Challenge 2021. The scenarios presented and all the people, places, groups, technologies, contained therein are fictitious. Any resemblance to real people, places, groups, or technologies is purely coincidental.
+
 # 1. Introduction and Objectives
+## Introduction
+
+On the island country of Kronos, a company known as GAStech have been operating a natural gas production facility for the last 20 years. It has produced remarkable profits and developed strong relations with the government of Kronos, albeit not as successful in demonstrating environmental stewardship. In January 2014, the leaders of GAStech are celebrating their new-found fortune because of the initial public offering of their very successful company. Amid this celebration, several employees of GAStech go missing. An organization known as the Protectors of Kronos (POK) is suspected in the disappearance. On the night of January 23, 2014, multiple events took place in the fictional city of Abila, capital of Kronos. As an analyst your job is to perform a retrospective analysis based on limited information about what took place.
+
+The information comes from a single data stream containing two sources:
+
+1. Microblog records that have been identified by automated filters as being potentially relevant to the ongoing incident
+2. Text transcripts of emergency dispatches by the Abila, Kronos local police and fire departments
+
 
 
 ```{r}
@@ -205,7 +216,7 @@ mb_words_by_author$in_dictionary <- if_else (mb_words_by_author$word %in% GradyA
 mb_words_by_author$sentiment <- get_sentiment(mb_words_by_author$word, method = "syuzhet")
 mb_words_by_author$total_sentiment <- mb_words_by_author$sentiment*mb_words_by_author$n
 
-nrc <- get_sentiments("nrc")
+#nrc <- get_sentiments("nrc")
 
 
 ```

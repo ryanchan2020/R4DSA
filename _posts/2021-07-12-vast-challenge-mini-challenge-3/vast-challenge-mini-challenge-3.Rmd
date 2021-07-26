@@ -156,7 +156,7 @@ Before we begin it is essential to load the packages we need.
 
 packages = c('igraph','tidygraph','ggraph','hms','textplot','tidyverse','lubridate','ggwordcloud','DT','wordcloud',
              'widyr','tidytext','dplyr','clock','visNetwork','hms','qdapDictionaries', 'textmineR','topicmodels',
-             'corpus','syuzhet','textdata','plotly','patchwork','Rcpp','greekLetters')
+             'corpus','syuzhet','textdata','plotly','patchwork','Rcpp','greekLetters','timevis')
 
 for(p in packages){
 if(!require(p, character.only = T)){
@@ -755,7 +755,7 @@ mb_words2_by_msg_top_terms %>%
 
 Based on the results of the topic modeling exercise above and referencing from what we already know so far, we can roughly see how each topic has a slight leaning towards a particular event:
 
-* Topics 2 and 3 seem to relate more to the POK Rally event
+* Topics 2 and 5 seem to relate more to the POK Rally event
 * Topics 4 and 6 seem to relate more to the fire outbreak at Dancing Dolphin
 * Topics 1 and 3 seem to relate more to the hostage situation and shootout/standoff
 
@@ -798,12 +798,12 @@ visLayout(randomSeed = 1234)
 
 From the above network results, we can roughly identify 6 distinct users who are positioned directly in he centre of the network, indicating that they are the most retweeted users and hence would most probably be a reliable source of information.
 
-Of the 6 users, the handles for 4 of them ("KronosStar", "AbilaPost", "Central Bulletin", "InternationalNews", "NewsOnlineToday") highly suggests that they belong to a news outlet, thereby enforcing the view that these users are reporters. These 6 user may hold the key to unfolding the timeline of events on the night of January 23, 2014.
+Of the 6 users, the handles for 5 of them ("KronosStar", "AbilaPost", "Central Bulletin", "InternationalNews", "NewsOnlineToday") highly suggests that they belong to a news outlet, thereby enforcing the view that these users are reporters. The final user ("HomelandIlluminations") does not have a name that sounds like a traditional news outlet, but nevertheless their microblog message style and syntax seems to be one of reporting nature. These 6 users may hold the key to unfolding the key timeline of events on the night of January 23, 2014.
 
 
 ### Exploring the tweets of important authors
 
-We will explore the tweets of the above-mentioned users to try and determine a more accurate timeline of the events of the night.
+We will explore the tweets of the above-mentioned users to try and determine a more accurate timeline of the events of the night. We shall explore the microblog messages together with the cc data, so that we may get a clearer picture as well.
 
 ```{r}
 
@@ -843,25 +843,73 @@ combined_dt_new <- combined_dt_new %>%
 
 combined_dt_new <- combined_dt_new[order(combined_dt_new$time), ]
 
-datatable(combined_dt_new, filter = 'top')
+datatable(combined_dt_new, filter = 'top', width = '200%')
 
 ```
 
-Based on analysis of our important users' tweets, we are able to reconstruct a history of the timeline of events that happened that night.
+### Event Timeline
+
+Based on analysis of our important users' tweets, we are able to reconstruct a history of the timeline of events that happened that night. Let us take a look at the time visualizations below.
 
 
+```{r echo=TRUE}
 
+fire_mb_rows <- c(67,77,83,95,116,122,149,154,160,251,354,406)
+fire_cc_rows <- c(63, 66, 101)
+hostage_mb_rows <- c(158, 173, 178, 197, 208, 253,395)
+hostage_cc_rows <- c(158,159,166,169,172,177,178,206,230)
 
-```{r}
+fire_mb <- combined_dt_new %>% filter(row_number() %in% fire_mb_rows)
+fire_mb <- select(fire_mb, -c(cc_call_type, cc_message, cc_location))
+fire_mb <- fire_mb %>% mutate(source = "fire_mb")
+fire_mb <- fire_mb %>% mutate(datetime = paste("2014-01-23", time, sep = " "))
+fire_mb <- fire_mb %>% transmute(id=1:12,group=source,start=datetime,content=mb_message,title=NA)
 
+fire_cc <- combined_dt_new %>% filter(row_number() %in% fire_cc_rows)
+fire_cc <- select(fire_cc, -c(mb_author, mb_message))
+fire_cc <- fire_cc %>% mutate(source = "fire_cc")
+fire_cc <- fire_cc %>% mutate(datetime = paste("2014-01-23", time, sep = " "))
+fire_cc <- fire_cc %>% transmute(id=13:15,group=source,start=datetime,content=cc_message,title=cc_location)
+
+fire_mbcc <- bind_rows(fire_mb,fire_cc)
+
+fire_groups <- data.frame(
+      id = c("fire_mb", "fire_cc"),
+      content = c("microblog", "callcentre")
+      )
+
+hostage_mb <- combined_dt_new %>% filter(row_number() %in% hostage_mb_rows)
+hostage_mb <- select(hostage_mb, -c(cc_call_type, cc_message, cc_location))
+hostage_mb <- hostage_mb %>% mutate(source = "hostage_mb")
+hostage_mb <- hostage_mb %>% mutate(datetime = paste("2014-01-23", time, sep = " "))
+hostage_mb <- hostage_mb %>% transmute(id=16:22,group=source,start=datetime,content=mb_message,title=NA)
+
+hostage_cc <- combined_dt_new %>% filter(row_number() %in% hostage_cc_rows)
+hostage_cc <- select(hostage_cc, -c(mb_author, mb_message))
+hostage_cc <- hostage_cc %>% mutate(source = "hostage_cc")
+hostage_cc <- hostage_cc %>% mutate(datetime = paste("2014-01-23", time, sep = " "))
+hostage_cc <- hostage_cc %>% transmute(id=23:31,group=source,start=datetime,content=cc_message,title=cc_location)
+
+hostage_mbcc <- bind_rows(hostage_mb,hostage_cc)
+
+hostage_groups <- data.frame(
+      id = c("hostage_mb", "hostage_cc"),
+      content = c("microblog", "callcentre")
+      )
+
+combined_mbcc <- bind_rows(fire_mb,fire_cc,hostage_mb,hostage_cc)
+
+combined_groups <- data.frame(
+      id = c("fire_mb", "fire_cc", "hostage_mb", "hostage_cc"),
+      content = c("Dancing Dolphin Fire microblog", "Dancing Dolphin Fire callcentre", "Gelato Galore Hostage microblog", "Gelato Galore Hostage callcentre")
+      )
+
+timevis(data = combined_mbcc, groups = combined_groups)
 
 
 ```
 
-
-
 ```{r}
-
 
 
 

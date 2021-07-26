@@ -7,14 +7,47 @@ author:
   - name: Ryan Chan
     url: https://www.linkedin.com/in/ryan-chan-a7021b5/
 date: 07-12-2021
+fontsize: 16pt
 output:
   distill::distill_article:
     self_contained: false
 ---
 
+<style type="text/css">
+
+body{ /* Normal  */
+      font-size: 16px;
+  }
+td {  /* Table  */
+  font-size: 8px;
+}
+h1.title {
+  font-size: 34px;
+  color: DarkRed;
+}
+h1 { /* Header 1 */
+  font-size: 28px;
+  color: DarkBlue;
+}
+h2 { /* Header 2 */
+    font-size: 22px;
+  color: DarkBlue;
+}
+h3 { /* Header 3 */
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: DarkBlue;
+}
+code.r{ /* Code block */
+    font-size: 12px;
+}
+pre { /* Code block - determines code spacing between lines */
+    font-size: 14px;
+}
+</style>
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message = FALSE, error = FALSE, warning = FALSE, fig.retina = 6)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, error = FALSE, warning = FALSE, fig.retina = 3)
 ```
 
 
@@ -64,15 +97,7 @@ The VAST Challenge 2014 provided the same storyline and data for Mini-Challenge 
 
 
 
-
-![](img/3. Hashtag Time Series.jpg)
-[Hashtag Time Series](http://visualdata.wustl.edu/varepository/VAST%20Challenge%202014/challenges/MC3%20-%20Real-Time,%20Streaming%20Social%20Media/entries/Virginia%20Tech/)
-
-
-
-
-
-![](img/4. Bi-Gram Time Series.jpg)
+![](img/4. Bi-Gram Time Series.jpg) {width=60%}
 [Bi-Gram Time Series](http://visualdata.wustl.edu/varepository/VAST%20Challenge%202014/challenges/MC3%20-%20Real-Time,%20Streaming%20Social%20Media/entries/International%20Institute%20of%20Information%20and%20Technology%20-%20Hyderabad/)
 
 
@@ -97,17 +122,9 @@ The VAST Challenge 2014 provided the same storyline and data for Mini-Challenge 
 
 
 
-
-![](img/7. Bi-Gram Wordcloud.jpg){width=50%}
-
-[Bi-Gram Wordcloud](http://visualdata.wustl.edu/varepository/VAST%20Challenge%202014/challenges/MC3%20-%20Real-Time,%20Streaming%20Social%20Media/entries/International%20Institute%20of%20Information%20and%20Technology%20-%20Hyderabad/)
-
-
-
-
 3. Retweet Network
 
-![](img/8. Retweet Network.jpg)
+![](img/8. Retweet Network.jpg) {width=80%}
 [Retweet Network](http://visualdata.wustl.edu/varepository/VAST%20Challenge%202014/challenges/MC3%20-%20Real-Time,%20Streaming%20Social%20Media/entries/Tianjin%20University/)
 
 The relationship of the re-tweet regarded as a proper measure of the identity of people in a social network.The authors in the center of the graph are the most re-tweeted users.
@@ -677,6 +694,10 @@ From the above visualization it seems we can find out more information about the
 
 4. Between 7.30-8.30pm there are mentions of "erratic driver", "wild driving" and "driving black (van possibly)". Could this possibly relate to the earlier mention of the black van, and possibly the hostage situation and shootout?
 
+The period between 7.30 to 8.30pm seem to be the most dangerous periods, with phrases such as 'shots fired', 'gun fire' and 'shooters continue' appearing. It is only until the 9-9.30pm period where we see phrases like 'suspects arrested' and 'hostages saved' then can we reasonably conclude that danger has more or less subsided,
+
+However, it is interesting to note as well the occurrence of a loud explosion being heard at possibly the Dancing Dolphin between the 9.30-10pm period. This might once again pose danger to civilians who are nearby.
+
 
 
 ### Topic Modeling with LDA
@@ -739,7 +760,147 @@ Based on the results of the topic modeling exercise above and referencing from w
 * Topic 2 does not seem to have a distinctive topic attached to it (although it contains slight mentions of the rally and the hostage situation at Gelato Galore)
 
 
+### Topics Across Time
 
+We shall now plot these topics over time to see if there are certain periods throughout the night with increased happenings.
+
+Take note that we have previously established that the word 'abila' appears all over the place throughout the night, and hence will likely not be meaningful in our analysis. Hence we shall remove the word 'abila' from Topic 4's top terms.
+
+
+``` {r echo=TRUE}
+
+fire_terms <- mb_words2_by_msg_top_terms %>% 
+  filter(topic == 4 | topic == 6) %>% 
+  filter(term != 'abila')
+fire_terms_list <- fire_terms$term
+
+hostage_terms <- mb_words2_by_msg_top_terms %>% 
+  filter(topic == 1)
+hostage_terms_list <- hostage_terms$term
+
+rally_terms <- mb_words2_by_msg_top_terms %>% 
+  filter(topic == 3 | topic == 5)
+rally_terms_list <- rally_terms$term
+
+```
+
+
+**Topic: Fire Outbreak**
+
+```{r}
+
+fire_trend <- mb_words2 %>% 
+  filter(word %in% fire_terms_list) %>% 
+  mutate(sentiment = get_sentiment(word, method = "syuzhet"))
+
+fire_trend_grouped <- fire_trend %>% 
+  group_by(timestamp) %>% 
+  summarise(count=n())
+
+fire_trend_grouped %>% 
+  plot_ly(x=~timestamp, y=~count) %>% 
+  add_lines()
+
+```
+
+**Topic: Hostage Standoff**
+
+```{r}
+
+hostage_trend <- mb_words2 %>% 
+  filter(word %in% hostage_terms_list)%>% 
+  mutate(sentiment = get_sentiment(word, method = "syuzhet"))
+
+hostage_trend_grouped <- hostage_trend %>% 
+  group_by(timestamp) %>% 
+  summarise(count=n())
+
+hostage_trend_grouped %>% 
+  plot_ly(x=~timestamp, y=~count) %>% 
+  add_lines(colors="red")
+
+```
+
+**Topic: POK Rally**
+
+```{r}
+
+rally_trend <- mb_words2 %>% 
+  filter(word %in% rally_terms_list)%>%
+  mutate(sentiment = get_sentiment(word, method = "syuzhet"))
+
+rally_trend_grouped <- rally_trend %>% 
+  group_by(timestamp) %>% 
+  summarise(count=n())
+
+rally_trend_grouped %>% 
+  plot_ly(x=~timestamp, y=~count, colors="set2") %>% 
+  add_lines()
+
+```
+
+From the results below, we see that there is a lot of mentions for the fire topic from 6.40pm to 6.50pm, understandable as the fire had just broken out and was being reported. 
+
+The hostage topic reached a frenzy between 7.40pm to 7.50pm, this may indicate that something dramatic happened during this period.The hostage topics continued to have small peaks at 8.10pm, 8.20pm and 8.35pm.
+
+We also investigated the POK rally topic, and found that it had many mentions throughout the night. 
+
+Therefore, after analysing the results, should we be concerned that these peak periods of time poses the greatest risk to civilians? Purely looking at the frequency of topic mentions may not suffice.
+
+
+### Topic Sentiment over Time
+
+It may provide more meaning if we also find out users' sentiments when they speak about these topics throughout the night. For each topic we shall plot a chart of topic mention frequency and the total sentiment score at that particular period.
+
+**Topic: Fire Outbreak Sentiment**
+
+``` {r}
+
+fire_trend_grouped_sentiment <- fire_trend %>% 
+  group_by(timestamp) %>% 
+  summarise(total_sentiment=sum(sentiment), count=n())
+
+fire_trend_grouped_sentiment %>% 
+  plot_ly(x=~timestamp) %>%
+  add_trace(y=~count, name = 'No. of Msgs',mode = 'lines') %>% 
+  add_trace(y=~total_sentiment*5, name = 'Sentiment', mode = 'lines')
+
+```
+
+**Topic: Hostage Standoff Sentiment**
+
+``` {r}
+
+hostage_trend_grouped_sentiment <- hostage_trend %>% 
+  group_by(timestamp) %>% 
+  summarise(total_sentiment=sum(sentiment), count=n())
+
+hostage_trend_grouped_sentiment %>% 
+  plot_ly(x=~timestamp) %>%
+  add_trace(y=~count, name = 'No. of Msgs',mode = 'lines') %>% 
+  add_trace(y=~total_sentiment*5, name = 'Sentiment', mode = 'lines')
+
+```
+
+**Topic: POK Rally Sentiment**
+
+``` {r}
+
+rally_trend_grouped_sentiment <- rally_trend %>% 
+  group_by(timestamp) %>% 
+  summarise(total_sentiment=sum(sentiment), count=n())
+
+rally_trend_grouped_sentiment %>% 
+  plot_ly(x=~timestamp) %>%
+  add_trace(y=~count, name = 'No. of Msgs',mode = 'lines') %>% 
+  add_trace(y=~total_sentiment*5, name = 'Sentiment', mode = 'lines')
+
+```
+
+
+Looking at the results above, it seems that for the fire and hostage topics, the sentiment score seem to be strongly inversely correlated to the topic mention frequency. It would not be too far fetched to say that the level of risks could mirror the sentiment and mention frequency - periods of large negativity could indicate people are very concerned for their safety.
+
+The POK Rally chart unfortunately does not tell us much, as there are certain periods where the sentiment score looked to be inversely correlated to the mention frequency, yet there are also periods where higher mention counts come along with higher sentiment scores. There are also periods where the sentiment scores are 0, meaning people were mostly in a neutral state speaking about the topic.
 
 
 ## Author Analysis
@@ -908,7 +1069,7 @@ From the timeline of events, we can see that the fire at Dancing Dolphin apartme
 
 The hostage standoff situation initially starts off innocuously, with the first reported event being a hit & run incident by the suspects' black van at 7.15pm. However, it could be the case that the police department did not seem to do a good job of catching the suspect, allowing the suspects to roam freely in the city for close to 10 minutes (between 7.20-7.30pm) before they were caught for a traffic violation and entered into a chase that ended up in a standoff at Gelato Galore. A backward analysis of the van's whereabouts can tell us roughly the route that the van took from the hit-and-run accident to Gelato Galore. The picture below outligns the black van's route.
 
-![](img/37. Black Van Route.JPG)
+![](img/37. Black Van Route.JPG){width=60%}
 
 
 The van ultimately reached Gelato Galore at 7.40pm, and engaged in a dramatic standoff, where shots were fired, hostages were taken and the SWAT team was dispatched. However, kudos to the police and SWAT team, they only managed to hold out for less than 30 minutes before they were apprehended and released the hostages at around 9.10pm.
@@ -920,5 +1081,5 @@ Retrospectively, if the police had acted quickly on the tip regarding the suspic
 
 However, things never happen in retrospect. It is also understandable that the police had their hands full as well with the fire at Dancing Dolphin. However, we can see a window where the police might have acted differently. The additional fire department personnel arrived at 7.15pm, slightly before the hit & run accident happened. With additional resources on the ground, the police could have possible devoted more units to search for the hit and run suspects. However, they did not do this, instead sending yet another police resource to the fire site.
 
-![](img/36. Additional Police at 716.JPG)
+![](img/36. Additional Police at 716.JPG){width=60%}
 

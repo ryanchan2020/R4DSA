@@ -14,7 +14,7 @@ output:
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message = FALSE, error = FALSE, warning = FALSE, fig.retina = 3)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, error = FALSE, warning = FALSE, fig.retina = 6)
 ```
 
 
@@ -678,28 +678,6 @@ From the above visualization it seems we can find out more information about the
 4. Between 7.30-8.30pm there are mentions of "erratic driver", "wild driving" and "driving black (van possibly)". Could this possibly relate to the earlier mention of the black van, and possibly the hostage situation and shootout?
 
 
-```{r}
-
-#mb_words_by_timeblock_tfidf <- mb_words_by_timeblock %>% 
-  #bind_tf_idf(word, time_block, n) %>%
-  #filter(n>1) %>% 
-  #arrange(desc(tf_idf))
-
-#mb_words_by_timeblock_tfidf %>%
-  #group_by(time_block) %>%
-  #slice_max(tf_idf,
-            #n = 10) %>%
-  #ungroup() %>%
-  #mutate(word = reorder(word,
-                        #tf_idf)) %>%
-  #ggplot(aes(tf_idf,word,fill = time_block)) +
-  #geom_col(show.legend = FALSE) +
-  #facet_wrap(~ time_block,
-             #scales = "free") +
-  #labs(x = "tf-idf",
-       #y = NULL)
-
-```
 
 ### Topic Modeling with LDA
 
@@ -718,13 +696,13 @@ mb_words2_by_message_tfidf <- mb_words2_by_message %>%
 
 ggplot(mb_words2_by_message_tfidf, aes(y=tf_idf)) +
   geom_boxplot() +
-  geom_hline(yintercept = 2.5, linetype = "dashed", color = "red") +
+  geom_hline(yintercept = 2.1, linetype = "dashed", color = "red") +
   ggtitle("TF-IDF") +
   xlab("")
 
 ```
 
-As can be seen in the boxplot of tf-idf scores above, we will remove words with tf-idf score of 2.5 or higher, as these words most likely do not hold any insightful meaning for us. Subsequently, We will proceed to create the document term matrix required for LDA.
+As can be seen in the boxplot of tf-idf scores above, we will remove words with tf-idf score of 2.1 or higher, as these words most likely do not hold any insightful meaning for us. Subsequently, We will proceed to create the document term matrix required for LDA.
 
 After pre-processing the dataset and creating the Document Term Matrix, we will now proceed to fit the model, using a k of 6 topics.
 
@@ -755,9 +733,14 @@ mb_words2_by_msg_top_terms %>%
 
 Based on the results of the topic modeling exercise above and referencing from what we already know so far, we can roughly see how each topic has a slight leaning towards a particular event:
 
-* Topics 2 and 5 seem to relate more to the POK Rally event
+* Topics 3 and 5 seem to relate more to the POK Rally event
 * Topics 4 and 6 seem to relate more to the fire outbreak at Dancing Dolphin
-* Topics 1 and 3 seem to relate more to the hostage situation and shootout/standoff
+* Topics 1 seem to relate more to the hostage situation and shootout/standoff
+* Topic 2 does not seem to have a distinctive topic attached to it (although it contains slight mentions of the rally and the hostage situation at Gelato Galore)
+
+
+
+
 
 ## Author Analysis
 
@@ -796,9 +779,9 @@ visLayout(randomSeed = 1234)
   
 ```
 
-From the above network results, we can roughly identify 6 distinct users who are positioned directly in he centre of the network, indicating that they are the most retweeted users and hence would most probably be a reliable source of information.
+From the above network results, we can roughly identify 7 distinct users who are positioned directly in he centre of the network, indicating that they are the most retweeted users and hence would most probably be a reliable source of information.
 
-Of the 6 users, the handles for 5 of them ("KronosStar", "AbilaPost", "Central Bulletin", "InternationalNews", "NewsOnlineToday") highly suggests that they belong to a news outlet, thereby enforcing the view that these users are reporters. The final user ("HomelandIlluminations") does not have a name that sounds like a traditional news outlet, but nevertheless their microblog message style and syntax seems to be one of reporting nature. These 6 users may hold the key to unfolding the key timeline of events on the night of January 23, 2014.
+Of the 7 users, the handles for 5 of them ("KronosStar", "AbilaPost", "Central Bulletin", "InternationalNews", "NewsOnlineToday") highly suggests that they belong to a news outlet, thereby enforcing the view that these users are reporters. Another user ("HomelandIlluminations") does not have a name that sounds like a traditional news outlet, but nevertheless their microblog message style and syntax seems to be one of reporting nature. The last user is an individual with the handle "megaman". He was retweeted a lot as he was present at the scene of one of the major events and was reporting it almost in real-time as it unfolded. Together these 7 users may hold the key to unfolding the key timeline of events on the night of January 23, 2014.
 
 
 ### Exploring the tweets of important authors
@@ -847,29 +830,31 @@ datatable(combined_dt_new, filter = 'top', width = '200%')
 
 ```
 
-### Event Timeline
+## Event Timeline
 
-Based on analysis of our important users' tweets, we are able to reconstruct a history of the timeline of events that happened that night. Let us take a look at the time visualizations below.
+Based on analysis of our important users' tweets, we are able to reconstruct a history of the timeline of events that happened that night. There are mainly two events that happened, a huge fire breakout at Dancing Dolphin apartment, and a hostage standoff situation at Gelato Galore. 
+
+Let us take a look at the time visualization below.
 
 
 ```{r echo=TRUE}
 
-fire_mb_rows <- c(67,77,83,95,116,122,149,154,160,251,354,406)
-fire_cc_rows <- c(63, 66, 101)
-hostage_mb_rows <- c(158, 173, 178, 197, 208, 253,395)
-hostage_cc_rows <- c(158,159,166,169,172,177,178,206,230)
+fire_mb_rows <- c(122,154,251,354,406)
+fire_cc_rows <- c(63,66,101)
+hostage_mb_rows <- c(197,208,253,395)
+hostage_cc_rows <- c(158,166,169,177,178,230)
 
 fire_mb <- combined_dt_new %>% filter(row_number() %in% fire_mb_rows)
 fire_mb <- select(fire_mb, -c(cc_call_type, cc_message, cc_location))
 fire_mb <- fire_mb %>% mutate(source = "fire_mb")
 fire_mb <- fire_mb %>% mutate(datetime = paste("2014-01-23", time, sep = " "))
-fire_mb <- fire_mb %>% transmute(id=1:12,group=source,start=datetime,content=mb_message,title=NA)
+fire_mb <- fire_mb %>% transmute(id=1:5,group=source,start=datetime,content=mb_message,title=NA)
 
 fire_cc <- combined_dt_new %>% filter(row_number() %in% fire_cc_rows)
 fire_cc <- select(fire_cc, -c(mb_author, mb_message))
 fire_cc <- fire_cc %>% mutate(source = "fire_cc")
 fire_cc <- fire_cc %>% mutate(datetime = paste("2014-01-23", time, sep = " "))
-fire_cc <- fire_cc %>% transmute(id=13:15,group=source,start=datetime,content=cc_message,title=cc_location)
+fire_cc <- fire_cc %>% transmute(id=6:8,group=source,start=datetime,content=cc_message,title=cc_location)
 
 fire_mbcc <- bind_rows(fire_mb,fire_cc)
 
@@ -882,13 +867,13 @@ hostage_mb <- combined_dt_new %>% filter(row_number() %in% hostage_mb_rows)
 hostage_mb <- select(hostage_mb, -c(cc_call_type, cc_message, cc_location))
 hostage_mb <- hostage_mb %>% mutate(source = "hostage_mb")
 hostage_mb <- hostage_mb %>% mutate(datetime = paste("2014-01-23", time, sep = " "))
-hostage_mb <- hostage_mb %>% transmute(id=16:22,group=source,start=datetime,content=mb_message,title=NA)
+hostage_mb <- hostage_mb %>% transmute(id=9:12,group=source,start=datetime,content=mb_message,title=NA)
 
 hostage_cc <- combined_dt_new %>% filter(row_number() %in% hostage_cc_rows)
 hostage_cc <- select(hostage_cc, -c(mb_author, mb_message))
 hostage_cc <- hostage_cc %>% mutate(source = "hostage_cc")
 hostage_cc <- hostage_cc %>% mutate(datetime = paste("2014-01-23", time, sep = " "))
-hostage_cc <- hostage_cc %>% transmute(id=23:31,group=source,start=datetime,content=cc_message,title=cc_location)
+hostage_cc <- hostage_cc %>% transmute(id=13:18,group=source,start=datetime,content=cc_message,title=cc_location)
 
 hostage_mbcc <- bind_rows(hostage_mb,hostage_cc)
 
@@ -904,61 +889,7 @@ combined_groups <- data.frame(
       content = c("Dancing Dolphin Fire microblog", "Dancing Dolphin Fire callcentre", "Gelato Galore Hostage microblog", "Gelato Galore Hostage callcentre")
       )
 
-timevis(data = combined_mbcc, groups = combined_groups)
-
-
-```
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
+timevis(data = combined_mbcc, groups = combined_groups, width = "1366px" ,height = "768px")
 
 
 ```
@@ -966,296 +897,28 @@ timevis(data = combined_mbcc, groups = combined_groups)
 
 
 
-```{r}
 
 
 
-```
 
+### Recounting the events of the night
 
+From the timeline of events, we can see that the fire at Dancing Dolphin apartment was a huge one. It was first reported at around 6.40pm, and 2 fire trucks were dispatched to handle the fire. However, the fire got worse, with officials deciding to evacuate neighbouring buildings just before 7pm. They also called for additional backup, although the additional fire trucks only arrived at 7.15pm. Police units were also deployed when the fire started to manage crowd control and provide assistance in terms evacuating the area. This early stages of the fire are the most risky, since there are still many residents who may not have evacuated yet, and the fire department is not yet fighting the fire at full strength. The fire continues to worsen with little that can be done to save the building, eventually the top floors of the building collapsed just after 8.30pm and an explosion was heard at 9.30pm.
 
-```{r}
 
+The hostage standoff situation initially starts off innocuously, with the first reported event being a hit & run incident by the suspects' black van at 7.15pm. However, it could be the case that the police department did not seem to do a good job of catching the suspect, allowing the suspects to roam freely in the city for close to 10 minutes (between 7.20-7.30pm) before they were caught for a traffic violation and entered into a chase that ended up in a standoff at Gelato Galore. A backward analysis of the van's whereabouts can tell us roughly the route that the van took from the hit-and-run accident to Gelato Galore. The picture below outligns the black van's route.
 
+![](img/37. Black Van Route.JPG)
 
-```
 
+The van ultimately reached Gelato Galore at 7.40pm, and engaged in a dramatic standoff, where shots were fired, hostages were taken and the SWAT team was dispatched. However, kudos to the police and SWAT team, they only managed to hold out for less than 30 minutes before they were apprehended and released the hostages at around 9.10pm.
 
 
-```{r}
+### Analysis
 
+Retrospectively, if the police had acted quickly on the tip regarding the suspicious black van at Egeou Ave and apprehended the criminals there and then, maybe the entire hostage standoff and shootout could have been avoided.
 
+However, things never happen in retrospect. It is also understandable that the police had their hands full as well with the fire at Dancing Dolphin. However, we can see a window where the police might have acted differently. The additional fire department personnel arrived at 7.15pm, slightly before the hit & run accident happened. With additional resources on the ground, the police could have possible devoted more units to search for the hit and run suspects. However, they did not do this, instead sending yet another police resource to the fire site.
 
-```
+![](img/36. Additional Police at 716.JPG)
 
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```
-
-
-
-```{r}
-
-
-
-```

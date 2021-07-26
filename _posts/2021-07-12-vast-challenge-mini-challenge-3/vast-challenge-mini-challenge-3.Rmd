@@ -810,52 +810,68 @@ We will explore the tweets of the above-mentioned users to try and determine a m
 RT_msg_DT <- mb_cleaned2 %>% 
   filter(author %in% c("megaMan", "KronosStar", "AbilaPost", "Central Bulletin", "InternationalNews", "NewsOnlineToday", "HomelandIlluminations")) %>% 
   transmute(time=timestamp, author=author, message=cleaned_message) %>% 
-  arrange(!(desc(time)))
-
-datatable(RT_msg_DT, filter = 'top')
-
-```
-
-Based on analysis of our important users' tweets, below is a history of the timeline of events that happened that night:
-
-
-
-
-```{r}
-
-#RT_graph <- tbl_graph(nodes = RT_node, edges = RT_edges_agg, directed = TRUE)
-
-#RT_network <- RT_graph %>% 
-  #mutate(degree_centrality = centrality_degree()) %>%
-  #ggraph(layout = "fr") +
-  #geom_edge_link(aes(width=n),
-  #alpha=0.2) +
-  #scale_edge_width(range = c(0.1, 5)) +
-  #geom_node_point(aes(colour = node,
-  #size=degree_centrality))
-
-#RT_network + theme_graph()
-
-```
-
-
-
-```{r}
+  arrange(!(desc(time))) %>% 
+  mutate(mb_id = row_number())
 
 cc_dt <- cc %>%
   filter(case_type != "Others") %>% 
-  transmute(call_type=case_type, message=message, time=timestamp,location=location) %>% 
+  transmute(cc_id=row_number(), call_type=case_type, message=message, time=timestamp,location=location) %>% 
   arrange(!(desc(time)))
 
-datatable(cc_dt)
+combined_dt <- full_join(RT_msg_DT,cc_dt,by="time") %>% 
+  mutate(time = parse_time(time, format = "%AT"))
+
+combined_dt <- combined_dt[order(combined_dt$time), ]
+
+combined_dt <- combined_dt %>%
+  arrange(!desc(mb_id)) %>% 
+  mutate(mb_author = ifelse(is.na(mb_id),NA,ifelse(mb_id!=lag(mb_id)|is.na(lag(mb_id)),author,NA))) %>%   
+  mutate(mb_message = ifelse(is.na(mb_id),NA,ifelse(mb_id!=lag(mb_id)|is.na(lag(mb_id)),message.x,NA)))
+
+combined_dt <- combined_dt[order(combined_dt$cc_id), ]
+
+combined_dt <- combined_dt %>%
+  mutate(cc_call_type = ifelse(is.na(cc_id),NA,ifelse(cc_id!=lag(cc_id)|is.na(lag(cc_id)),call_type,NA))) %>% 
+  mutate(cc_message = ifelse(is.na(cc_id),NA,ifelse(cc_id!=lag(cc_id)|is.na(lag(cc_id)),message.y,NA))) %>%
+  mutate(cc_location = ifelse(is.na(cc_id),NA,ifelse(cc_id!=lag(cc_id)|is.na(lag(cc_id)),location,NA)))
+
+combined_dt_new <- combined_dt %>% 
+  filter(!((is.na(mb_author) & is.na(mb_message)) & (is.na(cc_call_type) & is.na(cc_message) & is.na(cc_location))))
+
+combined_dt_new <- combined_dt_new %>% 
+  transmute(time=time, mb_author=mb_author, mb_message=mb_message, cc_call_type=cc_call_type, cc_message=cc_message, cc_location=cc_location)
+
+combined_dt_new <- combined_dt_new[order(combined_dt_new$time), ]
+
+datatable(combined_dt_new, filter = 'top')
+
+```
+
+Based on analysis of our important users' tweets, we are able to reconstruct a history of the timeline of events that happened that night.
+
+
+
+
+```{r}
+
+
 
 ```
 
 
-# 6. References
+
+```{r}
+
+
+
+
+```
+
 
 
 ```{r}
+
+
 
 
 ```
